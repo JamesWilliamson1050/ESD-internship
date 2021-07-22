@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+import webbrowser
 
 testurl = 'https://www.strath.ac.uk/courses/undergraduate/'
 
@@ -9,12 +10,17 @@ testhtml = testpage.read().decode("utf-8")
 
 testsoup = BeautifulSoup(testhtml, 'lxml')
 
-atags = testsoup.find_all('a', class_="course-search-result__link")
+courses = testsoup.find_all('a', class_="course-search-result__link")
+x = 0
+for course in courses:
 
-for hyperlinks in atags:
-    print(hyperlinks['href'])
-#
-# for atag in atags:
-#     print(atag.text)
+    print(course['href'])
+    webbrowser.open('https://www.strath.ac.uk' + course['href'])
+    x += 1
+    if x == 1:
+        break
+
+
+
 
 
