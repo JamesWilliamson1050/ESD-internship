@@ -1,9 +1,12 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+from requests_html import HTMLSession
 import webbrowser
 
 # Loading the strathclyde website
 defaultURL = 'https://www.strath.ac.uk'
+
+session = HTMLSession()
 
 
 # This extension takes you to all the university's courses
@@ -25,20 +28,31 @@ x = 0
 for course in courses:
 
 # Outputs a course's
-    print(course['href'])
+
+
 
     courseURL = (defaultURL + course['href'])
 
+    renderSession = session.get(courseURL)
+
+    # The first time this runs it will download chromium, the opensource version of google chrome
+    # renderSession.html.render(sleep=1,  keep_page=True, scrolldown=1)
+    #
+    # modules = renderSession.html.find('#moduel-content')
+
+    # for module in modules:
+    #     print(module)
+
 # Will open course web page in a browser
-  #  webbrowser.open(courseURL)
+    #webbrowser.open(courseURL)
     coursePage = urlopen(courseURL)
     courseHtml = coursePage.read().decode("utf-8")
     courseContent = BeautifulSoup(courseHtml, 'lxml')
 
 ## This is used to try and find a specific div
-    test = courseContent.find('div', {"id": "coursecontent"})
-    containerDiv = test('div', {'class': "container"})
-    #print(containerDiv)
+    test = courseContent.find_all('div', {'class': "course-module"})
+    #containerDiv = test('div', {'class': "tab-inner"})
+    print(test)
 
 
 
