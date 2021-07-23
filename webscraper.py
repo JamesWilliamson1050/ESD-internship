@@ -18,7 +18,8 @@ soup = BeautifulSoup(defaultHtml, 'lxml')
 # Basically finds all the classes individual extensions and stores them in a variable
 courses = soup.find_all('a', class_="course-search-result__link")
 
-moduleInfoList = []
+moduleInfoList = set([])
+
 # Loops through all courses
 for course in courses:
 
@@ -33,25 +34,27 @@ for course in courses:
 
     ## This is used to try and find a specific div
     modules = courseContent.find_all('div', {'class': "course-module"})
-
+    x = 0
     for module in modules:
         moduleTitle = module.find('h5')
         moduleDescription = module.find('div', {'class': "course-module-content-inner"})
 
         moduleTitleText = moduleTitle.text
         moduleDescriptionText = moduleDescription.text
-        # print(moduleTitleText)
-        # print(moduleDescriptionText)
-        # print()
 
-        f = open('test.txt', 'a', encoding='utf-8')
-        f.write(moduleTitleText)
-        f.write(moduleDescriptionText)
-        f.close()
+        # Opens and appends data to test.txt
+        readf = open('test.txt', 'r+', encoding='utf-8')
+        fcontent = readf.read()
+        # Only adding modules that aren't already in the text file
 
 
 
-
+        if moduleTitleText not in fcontent:
+            readf.write(moduleTitleText)
+            readf.write(moduleDescriptionText)
+            readf.write('\n')
+    break
+    readf.close()
 
 
 
@@ -60,4 +63,3 @@ for course in courses:
     # print(modules)
 
     # Makes the code only run once
-    break
