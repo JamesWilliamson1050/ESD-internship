@@ -11623,3 +11623,15 @@ This class aims to assist students in the fuller understanding of Public Health,
 Leading issues in circular economy
 The module introduces circular economy as a framework for the development and management of a sustainable 'waste-as-resource' economic system. The implications of the concept for transformations towards sustainability are explored in detail. 
 
+Biomedical Pharmacology
+
+
+The aims of this class are:
+
+to develop understanding of cardiovascular pathophysiology
+to develop understanding of respiratory disease
+to develop understanding of chronic inflammatory diseases
+to develop understanding of liver and kidney dysfunction
+to develop understanding of haematopoietic-linked diseases
+
+

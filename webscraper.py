@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
-
+from collections import defaultdict
 # Loading the strathclyde website
 defaultURL = 'https://www.strath.ac.uk'
 
@@ -18,8 +18,7 @@ soup = BeautifulSoup(defaultHtml, 'lxml')
 # Basically finds all the classes individual extensions and stores them in a variable
 courses = soup.find_all('a', class_="course-search-result__link")
 
-moduleInfoList = set([])
-
+moduleInfoDict = {}
 # Loops through all courses
 for course in courses:
 
@@ -47,7 +46,15 @@ for course in courses:
         #Opens, reads and writes data to test.txt
         readf = open('test.txt', 'r+', encoding='utf-8')
         fcontent = readf.read()
+
+
         # Only adding modules that aren't already in the text file
+        moduleDescList = []
+        moduleDescList.append(moduleDescriptionText)
+
+        if moduleTitleText not in moduleInfoDict:
+            moduleInfoDict[moduleTitleText] = moduleDescriptionText
+
 
 
 
@@ -57,8 +64,10 @@ for course in courses:
             readf.write('\n')
 
     readf.close()
-    #break
+    break
 
+
+    #Adding
 
 
 
