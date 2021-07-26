@@ -38,11 +38,13 @@ for course in courses:
     for module in modules:
         moduleTitle = module.find('h5')
         moduleDescription = module.find('div', {'class': "course-module-content-inner"})
+        moduleCode = module.find('div', {'class': "course-module-content"})
+
 
         moduleTitleText = moduleTitle.text
         moduleDescriptionText = moduleDescription.text
 
-        # Opens, reads and writes data to test.txt
+        #Opens, reads and writes data to test.txt
         readf = open('test.txt', 'r+', encoding='utf-8')
         fcontent = readf.read()
         # Only adding modules that aren't already in the text file
@@ -55,7 +57,7 @@ for course in courses:
             readf.write('\n')
 
     readf.close()
-    break
+    #break
 
 
 
