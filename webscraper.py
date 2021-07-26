@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
-from collections import defaultdict
+
+
 # Loading the strathclyde website
 defaultURL = 'https://www.strath.ac.uk'
 
@@ -42,35 +43,42 @@ for course in courses:
 
         moduleTitleText = moduleTitle.text
         moduleDescriptionText = moduleDescription.text
-
-        #Opens, reads and writes data to test.txt
-        readf = open('test.txt', 'r+', encoding='utf-8')
-        fcontent = readf.read()
+        moduleTitleText = moduleTitleText.strip()
+        moduleTitleText = moduleTitleText.rstrip()
 
 
-        # Only adding modules that aren't already in the text file
+
         moduleDescList = []
         moduleDescList.append(moduleDescriptionText)
 
         if moduleTitleText not in moduleInfoDict:
-            moduleInfoDict[moduleTitleText] = moduleDescriptionText
+            moduleInfoDict[moduleTitleText] = moduleDescList
+        else:
+            moduleInfoDict[moduleTitleText].extend(moduleDescriptionText)
+
+
+
+        #Opens, reads and writes data to test.txt
+        # readf = open('test.txt', 'r+', encoding='utf-8')
+        # fcontent = readf.read()
+
+
+        # Only adding modules that aren't already in the text file
 
 
 
 
-        if moduleTitleText not in fcontent:
-            readf.write(moduleTitleText)
-            readf.write(moduleDescriptionText)
-            readf.write('\n')
+    #     if moduleTitleText not in fcontent:
+    #         readf.write(moduleTitleText)
+    #         readf.write(moduleDescriptionText)
+    #         readf.write('\n')
+    #
+    # readf.close()
 
-    readf.close()
-    break
 
 
     #Adding
 
 
 
-    # print(modules)
 
-    # Makes the code only run once
