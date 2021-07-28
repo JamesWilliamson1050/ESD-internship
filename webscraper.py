@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+import csv
 
 # Loading the strathclyde website
 defaultURL = 'https://www.strath.ac.uk'
@@ -18,7 +19,8 @@ soup = BeautifulSoup(defaultHtml, 'lxml')
 # Basically finds all the classes individual extensions and stores them in a variable
 courses = soup.find_all('a', class_="course-search-result__link")
 
-moduleInfoDict = {}
+
+moduleInfoDict = dict()
 # Loops through all courses
 for course in courses:
 
@@ -29,10 +31,13 @@ for course in courses:
     courseHtml = coursePage.read().decode("utf-8")
     courseContent = BeautifulSoup(courseHtml, 'lxml')
 
+    courseLevel = course.find('div', {'class': ""})
+
+
     ## This is used to try and find a specific div
     modules = courseContent.find_all('div', {'class': "course-module"})
 
-    # print(modules)
+
 
     for module in modules:
         moduleTitle = module.find('h5')
@@ -43,31 +48,27 @@ for course in courses:
         moduleTitleText = moduleTitle.text
         moduleDescriptionText = moduleDescription.text
         # moduleYearText = moduleYear.text
-        print(moduleTitleText)
+
+
         moduleTitleText = moduleTitleText.strip()
         moduleTitleText = moduleTitleText.rstrip()
 
         moduleDescList = []
         moduleDescList.append(moduleDescriptionText)
 
+        # Opens, reads and writes data to test.txt
+
         if moduleTitleText not in moduleInfoDict:
             moduleInfoDict[moduleTitleText] = moduleDescList
         else:
-            moduleInfoDict[moduleTitleText].extend(moduleDescriptionText)
+            moduleInfoDict[moduleTitleText].append(moduleDescriptionText)#
+        print(moduleDescriptionText)
 
-        # Opens, reads and writes data to test.txt
-        # readf = open('test.txt', 'r+', encoding='utf-8')
-        # fcontent = readf.read()
 
-        # Only adding modules that aren't already in the text file
 
-    #     if moduleTitleText not in fcontent:
-    #         readf.write(moduleTitleText)
-    #         readf.write(moduleDescriptionText)
-    #         readf.write('\n')
-    #
-    # readf.close()
-    break
+
+
+
 
 # doesn't work properly
 # def write_dic_to_file():
@@ -83,5 +84,9 @@ if __name__ == '__main__':
     print()
     # write_dic_to_file()
     # print(moduleInfoDict.keys())
+
+    with open('moduleInfo.csv', 'w', encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerows(moduleInfoDict.items())
 
     # Adding
