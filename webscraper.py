@@ -64,10 +64,10 @@ for course in courses:
 
         moduleInfo = []
         if moduleTitleText not in moduleTitleDesc:
-            moduleTitleDesc[moduleTitleText] = moduleDescriptionText
-            moduleInfo.append(moduleTitleText)
-            moduleInfo.append(moduleDescriptionText)
-            allModuleInfo.append(moduleInfo)
+                moduleTitleDesc[moduleTitleText] = moduleDescriptionText
+                moduleInfo.append(moduleTitleText)
+                moduleInfo.append(moduleDescriptionText)
+                allModuleInfo.append(moduleInfo)
 
 
 
@@ -97,7 +97,7 @@ for course in courses:
 
 
 
-    break
+
 
 if __name__ == '__main__':
     # with open('moduleInfo.csv', 'w', encoding='UTF8', newline='') as f:
