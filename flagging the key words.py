@@ -34,6 +34,12 @@ soup = BeautifulSoup(defaultHtml, 'lxml')
 courses = soup.find_all('a', class_="course-search-result__link")
 
 output={}
+toWrite = ''
+    
+
+        
+   
+    
 # Loops through all courses
 for course in courses:
 
@@ -48,8 +54,16 @@ for course in courses:
 
     ## This is used to try and find a specific div
     modules = courseContent.find_all('div', {'class': "course-module"})
-   
+    
+    toWrite = toWrite + course['href'] + ','
+    
+    for header in range(1,18):
+        toWrite = toWrite + 'SDG' + str(header) + ','
+    toWrite = toWrite + '\n'
+    
+    
     for module in modules:
+        
         moduleTitle = module.find('h5')
         moduleDescription = module.find('div', {'class': "course-module-content-inner"})
 
@@ -58,32 +72,38 @@ for course in courses:
         moduleDescriptionText = moduleDescription.text.lower()
 
         sdgList =[]
-        
+
         for key in sdg.keys():
             CurrentWord = ''
             for word in sdg[key]:
                 if word in moduleDescriptionText:
-                    CurrentWord = CurrentWord + word + '; '
+                    CurrentWord = CurrentWord + word + '; ' 
             if len(CurrentWord) > 0:
                 CurrentWord = CurrentWord[:-2]
                         
-                    
+                  
                     
             sdgList.append(CurrentWord)
                     
         output[moduleTitleText] = sdgList
-        
+        toWrite = toWrite + moduleTitleText.replace(',',';' ) + ',' + ','.join(sdgList) +'\n'
+    toWrite = toWrite + '\n' + '\n'    
+    
     #break
+    #for key in output.keys():
+     #       toWrite = toWrite + (key.replace(',',';' ) + ',' + ','.join(output[key]) + '\n')    
+            
+    
                     
 with open('SDGwords.csv', 'w', encoding = "utf-8") as csvfile:
-    toWrite = ','
+    #toWrite = ','
     
-    for header in range(1,18):
-        toWrite = toWrite + 'SDG' + str(header) + ','
-    toWrite = toWrite + '\n'
+    # for header in range(1,18):
+    #     toWrite = toWrite + 'SDG' + str(header) + ','
+    # toWrite = toWrite + '\n'
         
-    for key in output.keys():
-        toWrite = toWrite + (key.replace(',',';' ) + ',' + ','.join(output[key]) + '\n')    
+    # for key in output.keys():
+    #     toWrite = toWrite + (key.replace(',',';' ) + ',' + ','.join(output[key]) + '\n')    
         
     csvfile.write(toWrite)
     
