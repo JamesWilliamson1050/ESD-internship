@@ -1,3 +1,4 @@
+import numpy
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import csv
@@ -19,8 +20,14 @@ soup = BeautifulSoup(defaultHtml, 'lxml')
 # Basically finds all the classes individual extensions and stores them in a variable
 courses = soup.find_all('a', class_="course-search-result__link")
 
+moduleTitleDesc = dict()
 
-moduleInfoDict = dict()
+allModuleInfo = []
+
+headerInfo = ['Module Title', 'Module Description']
+
+count = 0
+
 # Loops through all courses
 for course in courses:
 
@@ -33,12 +40,10 @@ for course in courses:
 
     courseLevel = course.find('div', {'class': ""})
 
-
     ## This is used to try and find a specific div
     modules = courseContent.find_all('div', {'class': "course-module"})
 
-
-
+    # loops through modules
     for module in modules:
         moduleTitle = module.find('h5')
         moduleDescription = module.find('div', {'class': "course-module-content-inner"})
@@ -47,22 +52,37 @@ for course in courses:
 
         moduleTitleText = moduleTitle.text
         moduleDescriptionText = moduleDescription.text
+        moduleDescriptionText = moduleDescriptionText.replace('\n', '')
+        moduleDescriptionText = moduleDescriptionText.replace('\r', '')
+        utfmoduleDescription = moduleDescriptionText.encode("UTF8")
         # moduleYearText = moduleYear.text
-
 
         moduleTitleText = moduleTitleText.strip()
         moduleTitleText = moduleTitleText.rstrip()
 
-        moduleDescList = []
-        moduleDescList.append(moduleDescriptionText)
+        moduleDescList = [moduleDescriptionText]
 
-        # Opens, reads and writes data to test.txt
+        moduleInfo = []
+        if moduleTitleText not in moduleTitleDesc:
+            moduleTitleDesc[moduleTitleText] = moduleDescriptionText
+            moduleInfo.append(moduleTitleText)
+            moduleInfo.append(moduleDescriptionText)
+            allModuleInfo.append(moduleInfo)
 
-        if moduleTitleText not in moduleInfoDict:
-            moduleInfoDict[moduleTitleText] = moduleDescList
+
+
         else:
-            moduleInfoDict[moduleTitleText].append(moduleDescriptionText)#
-        print(moduleDescriptionText)
+            if moduleTitleDesc[moduleTitleText] != moduleDescriptionText:
+                currentModuleInfo = []
+                currentModuleInfo.append(moduleTitleText)
+                currentModuleInfo.append(moduleTitleDesc[moduleTitleText])
+                moduleInfo.append(moduleTitleText)
+                moduleTitleDesc[moduleTitleText] = moduleTitleDesc[moduleTitleText] + moduleDescriptionText
+                moduleInfo.append(moduleTitleDesc[moduleTitleText])
+                currentModuleIndex = allModuleInfo.index(currentModuleInfo)
+                allModuleInfo[currentModuleIndex] = moduleInfo
+
+        count += 1
 
 
 
@@ -70,23 +90,29 @@ for course in courses:
 
 
 
-# doesn't work properly
-# def write_dic_to_file():
-#     try:
-#         file = open('test.txt', 'a')
-#         file.write(json.dumps(moduleInfoDict))
-#         file.close
-#     except:
-#         print("Unable to write to file")
+                #print("Hello")
+            #print("Hello")
+        #allModuleInfo.append(moduleInfo)
 
+
+
+
+    break
 
 if __name__ == '__main__':
+    # with open('moduleInfo.csv', 'w', encoding='UTF8', newline='') as f:
+    #     writer = csv.writer(f)
+    #     # write the header
+    #     writer.writerow(headerInfo)
+    #     writer.writerows(allModuleInfo)
+    # f.close()
+
+    with open('test.txt', 'w', encoding='UTF8', newline='') as f:
+        f.write(", ".join(headerInfo) + "\n")
+        for ModuleInfo in allModuleInfo:
+            f.write(", ".join(ModuleInfo) + "\n")
+
+        # write the header
+
+    f.close()
     print()
-    # write_dic_to_file()
-    # print(moduleInfoDict.keys())
-
-    with open('moduleInfo.csv', 'w', encoding="utf-8") as f:
-        w = csv.writer(f)
-        w.writerows(moduleInfoDict.items())
-
-    # Adding
