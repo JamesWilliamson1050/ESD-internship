@@ -3,7 +3,8 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import csv
 
-# Loading the strathclyde website
+
+#Loading the strathclyde website
 defaultURL = 'https://www.strath.ac.uk'
 
 # This extension takes you to all the university's courses
@@ -79,8 +80,8 @@ for course in courses:
             allModuleInfo.append(moduleInfo)
 
             # This can be ignored for now
-            if 'Elective' in moduleTitleText:
-                print('Elective' + moduleTitleText)
+            # if 'Elective' in moduleTitleText:
+            #     print('Elective' + moduleTitleText)
 
         # If module title is already in the dictionary
         else:
@@ -98,22 +99,41 @@ for course in courses:
                 currentModuleIndex = allModuleInfo.index(currentModuleInfo)
                 allModuleInfo[currentModuleIndex] = moduleInfo
 
-    break
+
+
+
+
+
+def writeToCSV():
+    # Writing all module information to a csv file
+    with open('moduleInfo.csv', 'w', encoding='UTF8', newline='') as f:
+        writer = csv.writer(f)
+        # write the header
+        writer.writerow(headerInfo)
+        writer.writerows(allModuleInfo)
+    f.close()
+
+
+def writeToText():
+    # Writing module title and module description to text file
+    with open('moduleInfo.txt', 'w', encoding='UTF8', newline='') as f:
+        f.write(", ".join(headerInfo) + "\n")
+        for ModuleInfo in allModuleInfo:
+            titleOfModule = ModuleInfo[0]
+            descOfModule = ModuleInfo[1]
+
+            f.write(titleOfModule + ':' + descOfModule + '\n')
+        # write the header
+
+    f.close()
+
 
 if __name__ == '__main__':
-    # with open('moduleInfo.csv', 'w', encoding='UTF8', newline='') as f:
-    #     writer = csv.writer(f)
-    #     # write the header
-    #     writer.writerow(headerInfo)
-    #     writer.writerows(allModuleInfo)
-    # f.close()
+    writeToCSV()
+   # writeToText()
 
-    # with open('test.txt', 'w', encoding='UTF8', newline='') as f:
-    #     f.write(", ".join(headerInfo) + "\n")
-    #     for ModuleInfo in allModuleInfo:
-    #         f.write(", ".join(ModuleInfo) + "\n")
-    #
-    #     # write the header
-    #
-    # f.close()
-    print()
+
+    # read_file = pd.read_csv('text.txt')
+    # read_file.to_csv(r'moduleInfo.csv', index=None)
+
+    #print(allModuleInfo)
