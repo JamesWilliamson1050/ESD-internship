@@ -11,7 +11,6 @@ courseSearchExtension = '/courses/undergraduate/'
 
 # The next two lines are basically opening the html file
 defaultPage = urlopen(defaultURL + courseSearchExtension)
-
 defaultHtml = defaultPage.read().decode("utf-8")
 
 # I think this parses the html, might've forgotten
@@ -20,13 +19,14 @@ soup = BeautifulSoup(defaultHtml, 'lxml')
 # Basically finds all the classes individual extensions and stores them in a variable
 courses = soup.find_all('a', class_="course-search-result__link")
 
+# A dictionary with the module titles as the keys and module descriptions as values
 moduleTitleDesc = dict()
 
+# A list containing all information of each module
 allModuleInfo = []
 
+# Used for outputting headers of CSV file
 headerInfo = ['Module Title', 'Module Description']
-
-count = 0
 
 # Loops through all courses
 for course in courses:
@@ -34,70 +34,71 @@ for course in courses:
     # Outputs a course's
     courseURL = (defaultURL + course['href'])
 
+    # Opens the course webpage, in a format that can be understood
     coursePage = urlopen(courseURL)
     courseHtml = coursePage.read().decode("utf-8")
+
+    # Beings web scraping the current web page
     courseContent = BeautifulSoup(courseHtml, 'lxml')
 
     courseLevel = course.find('div', {'class': ""})
 
-    ## This is used to try and find a specific div
+    # This finds a specific module
     modules = courseContent.find_all('div', {'class': "course-module"})
 
     # loops through modules
     for module in modules:
+        # Find module title and module description
         moduleTitle = module.find('h5')
         moduleDescription = module.find('div', {'class': "course-module-content-inner"})
         # moduleCode = module.find('div', {'class': "course-module-content"})
         # print(moduleCode)
 
+        # Storing module titles and module descriptions as plain text
         moduleTitleText = moduleTitle.text
         moduleDescriptionText = moduleDescription.text
+
+        # Removing new lines from module descriptions
         moduleDescriptionText = moduleDescriptionText.replace('\n', '')
         moduleDescriptionText = moduleDescriptionText.replace('\r', '')
-        utfmoduleDescription = moduleDescriptionText.encode("UTF8")
-        # moduleYearText = moduleYear.text
 
+        # Removing spaces from the beginning and end of module titles
         moduleTitleText = moduleTitleText.strip()
-        moduleTitleText = moduleTitleText.rstrip()
 
-        moduleDescList = [moduleDescriptionText]
-
+        # Stores information on the current module
         moduleInfo = []
+
+        # Checks if a module title is in a dictionary
         if moduleTitleText not in moduleTitleDesc:
-                moduleTitleDesc[moduleTitleText] = moduleDescriptionText
-                moduleInfo.append(moduleTitleText)
-                moduleInfo.append(moduleDescriptionText)
-                allModuleInfo.append(moduleInfo)
+            # Add module title and description to the dictionary
+            moduleTitleDesc[moduleTitleText] = moduleDescriptionText
 
+            # Add any other relative information to a list, 'moduleInfo', then adds that list to a list of lists, 'allModuleInfo'
+            moduleInfo.append(moduleTitleText)
+            moduleInfo.append(moduleDescriptionText)
+            allModuleInfo.append(moduleInfo)
 
+            # This can be ignored for now
+            if 'Elective' in moduleTitleText:
+                print('Elective' + moduleTitleText)
 
+        # If module title is already in the dictionary
         else:
+            # Check if module description has changed from the current one
             if moduleTitleDesc[moduleTitleText] != moduleDescriptionText:
+                # Keeps a list of the currently stored module Information
                 currentModuleInfo = []
                 currentModuleInfo.append(moduleTitleText)
                 currentModuleInfo.append(moduleTitleDesc[moduleTitleText])
+
+                # Updates the module information
                 moduleInfo.append(moduleTitleText)
                 moduleTitleDesc[moduleTitleText] = moduleTitleDesc[moduleTitleText] + moduleDescriptionText
                 moduleInfo.append(moduleTitleDesc[moduleTitleText])
                 currentModuleIndex = allModuleInfo.index(currentModuleInfo)
                 allModuleInfo[currentModuleIndex] = moduleInfo
 
-        count += 1
-
-
-
-
-
-
-
-                #print("Hello")
-            #print("Hello")
-        #allModuleInfo.append(moduleInfo)
-
-
-
-
-
+    break
 
 if __name__ == '__main__':
     # with open('moduleInfo.csv', 'w', encoding='UTF8', newline='') as f:
@@ -107,12 +108,12 @@ if __name__ == '__main__':
     #     writer.writerows(allModuleInfo)
     # f.close()
 
-    with open('test.txt', 'w', encoding='UTF8', newline='') as f:
-        f.write(", ".join(headerInfo) + "\n")
-        for ModuleInfo in allModuleInfo:
-            f.write(", ".join(ModuleInfo) + "\n")
-
-        # write the header
-
-    f.close()
+    # with open('test.txt', 'w', encoding='UTF8', newline='') as f:
+    #     f.write(", ".join(headerInfo) + "\n")
+    #     for ModuleInfo in allModuleInfo:
+    #         f.write(", ".join(ModuleInfo) + "\n")
+    #
+    #     # write the header
+    #
+    # f.close()
     print()
