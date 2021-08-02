@@ -3,8 +3,7 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import csv
 
-
-#Loading the strathclyde website
+# Loading the strathclyde website
 defaultURL = 'https://www.strath.ac.uk'
 
 # This extension takes you to all the university's courses
@@ -28,6 +27,25 @@ allModuleInfo = []
 
 # Used for outputting headers of CSV file
 headerInfo = ['Module Title', 'Module Description']
+undergraduateList = []
+postgraduateList = []
+
+
+# Used to fill in the undergraduate Lisr
+def fillUndergraduateList():
+
+    with open('Class List Undergraduate 21-22.csv', 'r') as undergraduateCSV:
+        reader = csv.reader(undergraduateCSV)
+
+        for row in reader:
+            if len(row) > 2:
+                undergraduateList.append(row)
+
+    undergraduateCSV.close()
+
+
+
+
 
 # Loops through all courses
 for course in courses:
@@ -43,6 +61,7 @@ for course in courses:
     courseContent = BeautifulSoup(courseHtml, 'lxml')
 
     courseLevel = course.find('div', {'class': ""})
+    courseLevelText = courseLevel.text
 
     # This finds a specific module
     modules = courseContent.find_all('div', {'class': "course-module"})
@@ -52,8 +71,6 @@ for course in courses:
         # Find module title and module description
         moduleTitle = module.find('h5')
         moduleDescription = module.find('div', {'class': "course-module-content-inner"})
-        # moduleCode = module.find('div', {'class': "course-module-content"})
-        # print(moduleCode)
 
         # Storing module titles and module descriptions as plain text
         moduleTitleText = moduleTitle.text
@@ -77,7 +94,9 @@ for course in courses:
             # Add any other relative information to a list, 'moduleInfo', then adds that list to a list of lists, 'allModuleInfo'
             moduleInfo.append(moduleTitleText)
             moduleInfo.append(moduleDescriptionText)
+            moduleInfo.append(courseLevelText)
             allModuleInfo.append(moduleInfo)
+            # print(moduleInfo)
 
             # This can be ignored for now
             # if 'Elective' in moduleTitleText:
@@ -91,17 +110,20 @@ for course in courses:
                 currentModuleInfo = []
                 currentModuleInfo.append(moduleTitleText)
                 currentModuleInfo.append(moduleTitleDesc[moduleTitleText])
+                currentModuleInfo.append(courseLevelText)
 
                 # Updates the module information
                 moduleInfo.append(moduleTitleText)
                 moduleTitleDesc[moduleTitleText] = moduleTitleDesc[moduleTitleText] + moduleDescriptionText
                 moduleInfo.append(moduleTitleDesc[moduleTitleText])
+                moduleInfo.append(courseLevelText)
                 currentModuleIndex = allModuleInfo.index(currentModuleInfo)
                 allModuleInfo[currentModuleIndex] = moduleInfo
+                print("Changed " + str(moduleInfo))
 
+        # searchForClass(moduleTitleText, courseLevelText)
 
-
-
+    break
 
 
 def writeToCSV():
@@ -129,11 +151,13 @@ def writeToText():
 
 
 if __name__ == '__main__':
-    writeToCSV()
-   # writeToText()
+    fillUndergraduateList()
+
+# writeToCSV()
+# writeToText()
 
 
-    # read_file = pd.read_csv('text.txt')
-    # read_file.to_csv(r'moduleInfo.csv', index=None)
+# read_file = pd.read_csv('text.txt')
+# read_file.to_csv(r'moduleInfo.csv', index=None)
 
-    #print(allModuleInfo)
+# print(allModuleInfo)
