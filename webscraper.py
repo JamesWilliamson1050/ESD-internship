@@ -44,9 +44,11 @@ def fillUndergraduateList():
 
 
 def searchUndergraduate(moduleSearchUG):
+    # Returns the code and level of a course found in the class catalogue csv file
     for mod in undergraduateList:
         if moduleSearchUG in mod:
-            return mod[3]
+            return (mod[0], mod[3])
+
 
 def findModules():
     # Loops through all courses
@@ -85,6 +87,18 @@ def findModules():
             # Removing spaces from the beginning and end of module titles
             moduleTitleText = moduleTitleText.strip()
 
+            # Removing spaces from course level
+            courseLevelText = courseLevelText.strip()
+
+
+            moduleLevel = None
+            moduleCode = None
+            if courseLevelText == 'Undergraduate':
+                moduleLevel = searchUndergraduate(moduleTitleText)
+                if moduleLevel is not None:
+                    moduleCode = moduleLevel[0]
+                    moduleLevel = moduleLevel[1]
+
             # Stores information on the current module
             moduleInfo = []
 
@@ -94,9 +108,12 @@ def findModules():
                 moduleTitleDesc[moduleTitleText] = moduleDescriptionText
 
                 # Add any other relative information to a list, 'moduleInfo', then adds that list to a list of lists, 'allModuleInfo'
+                moduleInfo.append(moduleCode)
                 moduleInfo.append(moduleTitleText)
                 moduleInfo.append(moduleDescriptionText)
                 moduleInfo.append(courseLevelText)
+                moduleInfo.append(moduleLevel)
+                print(moduleInfo)
                 allModuleInfo.append(moduleInfo)
                 # print(moduleInfo)
 
@@ -110,20 +127,22 @@ def findModules():
                 if moduleTitleDesc[moduleTitleText] != moduleDescriptionText:
                     # Keeps a list of the currently stored module Information
                     currentModuleInfo = []
+                    currentModuleInfo.append(moduleCode)
                     currentModuleInfo.append(moduleTitleText)
                     currentModuleInfo.append(moduleTitleDesc[moduleTitleText])
                     currentModuleInfo.append(courseLevelText)
+                    currentModuleInfo.append(moduleLevel)
+
 
                     # Updates the module information
+                    moduleInfo.append(moduleCode)
                     moduleInfo.append(moduleTitleText)
                     moduleTitleDesc[moduleTitleText] = moduleTitleDesc[moduleTitleText] + moduleDescriptionText
                     moduleInfo.append(moduleTitleDesc[moduleTitleText])
                     moduleInfo.append(courseLevelText)
+                    moduleInfo.append(moduleLevel)
                     currentModuleIndex = allModuleInfo.index(currentModuleInfo)
                     allModuleInfo[currentModuleIndex] = moduleInfo
-
-            moduleLevel  = searchUndergraduate(moduleTitleText)
-
 
         break
 
@@ -155,7 +174,7 @@ def writeToText():
 if __name__ == '__main__':
     fillUndergraduateList()
     findModules()
-    #searchUndergraduate('Strategy And Leadership')
+    # searchUndergraduate('Strategy And Leadership')
 
 # writeToCSV()
 # writeToText()
