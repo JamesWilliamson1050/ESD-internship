@@ -33,7 +33,6 @@ postgraduateList = []
 
 # Used to fill in the undergraduate Lisr
 def fillUndergraduateList():
-
     with open('Class List Undergraduate 21-22.csv', 'r') as undergraduateCSV:
         reader = csv.reader(undergraduateCSV)
 
@@ -44,86 +43,89 @@ def fillUndergraduateList():
     undergraduateCSV.close()
 
 
+def searchUndergraduate(moduleSearchUG):
+    for mod in undergraduateList:
+        if moduleSearchUG in mod:
+            return mod[3]
 
+def findModules():
+    # Loops through all courses
+    for course in courses:
 
+        # Outputs a course's
+        courseURL = (defaultURL + course['href'])
 
-# Loops through all courses
-for course in courses:
+        # Opens the course webpage, in a format that can be understood
+        coursePage = urlopen(courseURL)
+        courseHtml = coursePage.read().decode("utf-8")
 
-    # Outputs a course's
-    courseURL = (defaultURL + course['href'])
+        # Beings web scraping the current web page
+        courseContent = BeautifulSoup(courseHtml, 'lxml')
 
-    # Opens the course webpage, in a format that can be understood
-    coursePage = urlopen(courseURL)
-    courseHtml = coursePage.read().decode("utf-8")
+        courseLevel = course.find('div', {'class': ""})
+        courseLevelText = courseLevel.text
 
-    # Beings web scraping the current web page
-    courseContent = BeautifulSoup(courseHtml, 'lxml')
+        # This finds a specific module
+        modules = courseContent.find_all('div', {'class': "course-module"})
 
-    courseLevel = course.find('div', {'class': ""})
-    courseLevelText = courseLevel.text
+        # loops through modules
+        for module in modules:
+            # Find module title and module description
+            moduleTitle = module.find('h5')
+            moduleDescription = module.find('div', {'class': "course-module-content-inner"})
 
-    # This finds a specific module
-    modules = courseContent.find_all('div', {'class': "course-module"})
+            # Storing module titles and module descriptions as plain text
+            moduleTitleText = moduleTitle.text
+            moduleDescriptionText = moduleDescription.text
 
-    # loops through modules
-    for module in modules:
-        # Find module title and module description
-        moduleTitle = module.find('h5')
-        moduleDescription = module.find('div', {'class': "course-module-content-inner"})
+            # Removing new lines from module descriptions
+            moduleDescriptionText = moduleDescriptionText.replace('\n', '')
+            moduleDescriptionText = moduleDescriptionText.replace('\r', '')
 
-        # Storing module titles and module descriptions as plain text
-        moduleTitleText = moduleTitle.text
-        moduleDescriptionText = moduleDescription.text
+            # Removing spaces from the beginning and end of module titles
+            moduleTitleText = moduleTitleText.strip()
 
-        # Removing new lines from module descriptions
-        moduleDescriptionText = moduleDescriptionText.replace('\n', '')
-        moduleDescriptionText = moduleDescriptionText.replace('\r', '')
+            # Stores information on the current module
+            moduleInfo = []
 
-        # Removing spaces from the beginning and end of module titles
-        moduleTitleText = moduleTitleText.strip()
+            # Checks if a module title is in a dictionary
+            if moduleTitleText not in moduleTitleDesc:
+                # Add module title and description to the dictionary
+                moduleTitleDesc[moduleTitleText] = moduleDescriptionText
 
-        # Stores information on the current module
-        moduleInfo = []
-
-        # Checks if a module title is in a dictionary
-        if moduleTitleText not in moduleTitleDesc:
-            # Add module title and description to the dictionary
-            moduleTitleDesc[moduleTitleText] = moduleDescriptionText
-
-            # Add any other relative information to a list, 'moduleInfo', then adds that list to a list of lists, 'allModuleInfo'
-            moduleInfo.append(moduleTitleText)
-            moduleInfo.append(moduleDescriptionText)
-            moduleInfo.append(courseLevelText)
-            allModuleInfo.append(moduleInfo)
-            # print(moduleInfo)
-
-            # This can be ignored for now
-            # if 'Elective' in moduleTitleText:
-            #     print('Elective' + moduleTitleText)
-
-        # If module title is already in the dictionary
-        else:
-            # Check if module description has changed from the current one
-            if moduleTitleDesc[moduleTitleText] != moduleDescriptionText:
-                # Keeps a list of the currently stored module Information
-                currentModuleInfo = []
-                currentModuleInfo.append(moduleTitleText)
-                currentModuleInfo.append(moduleTitleDesc[moduleTitleText])
-                currentModuleInfo.append(courseLevelText)
-
-                # Updates the module information
+                # Add any other relative information to a list, 'moduleInfo', then adds that list to a list of lists, 'allModuleInfo'
                 moduleInfo.append(moduleTitleText)
-                moduleTitleDesc[moduleTitleText] = moduleTitleDesc[moduleTitleText] + moduleDescriptionText
-                moduleInfo.append(moduleTitleDesc[moduleTitleText])
+                moduleInfo.append(moduleDescriptionText)
                 moduleInfo.append(courseLevelText)
-                currentModuleIndex = allModuleInfo.index(currentModuleInfo)
-                allModuleInfo[currentModuleIndex] = moduleInfo
-                print("Changed " + str(moduleInfo))
+                allModuleInfo.append(moduleInfo)
+                # print(moduleInfo)
 
-        # searchForClass(moduleTitleText, courseLevelText)
+                # This can be ignored for now
+                # if 'Elective' in moduleTitleText:
+                #     print('Elective' + moduleTitleText)
 
-    break
+            # If module title is already in the dictionary
+            else:
+                # Check if module description has changed from the current one
+                if moduleTitleDesc[moduleTitleText] != moduleDescriptionText:
+                    # Keeps a list of the currently stored module Information
+                    currentModuleInfo = []
+                    currentModuleInfo.append(moduleTitleText)
+                    currentModuleInfo.append(moduleTitleDesc[moduleTitleText])
+                    currentModuleInfo.append(courseLevelText)
+
+                    # Updates the module information
+                    moduleInfo.append(moduleTitleText)
+                    moduleTitleDesc[moduleTitleText] = moduleTitleDesc[moduleTitleText] + moduleDescriptionText
+                    moduleInfo.append(moduleTitleDesc[moduleTitleText])
+                    moduleInfo.append(courseLevelText)
+                    currentModuleIndex = allModuleInfo.index(currentModuleInfo)
+                    allModuleInfo[currentModuleIndex] = moduleInfo
+
+            moduleLevel  = searchUndergraduate(moduleTitleText)
+
+
+        break
 
 
 def writeToCSV():
@@ -152,6 +154,8 @@ def writeToText():
 
 if __name__ == '__main__':
     fillUndergraduateList()
+    findModules()
+    #searchUndergraduate('Strategy And Leadership')
 
 # writeToCSV()
 # writeToText()
