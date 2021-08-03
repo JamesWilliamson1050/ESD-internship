@@ -21,6 +21,7 @@ courses = soup.find_all('a', class_="course-search-result__link")
 
 # A dictionary with the module titles as the keys and module descriptions as values
 moduleTitleDesc = dict()
+moduleTupleList = []
 
 # A list containing all information of each module
 allModuleInfo = []
@@ -30,7 +31,7 @@ headerInfo = ['Module Title', 'Module Description']
 undergraduateList = []
 postgraduateList = []
 
-filterList = ['Elective classes', 'Elective', 'Year 1', 'Transferable Skills']
+filterList = ['Elective classes', 'Elective', 'Year 1', 'Transferable Skills', 'Course Summary']
 
 
 # Used to fill in the undergraduate Lisr
@@ -90,25 +91,39 @@ def findModules():
         # This finds a specific module
         modules = courseContent.find_all('div', {'class': "course-module"})
 
+
         # loops through modules
         for module in modules:
-            # Find module title and module description
+
+           # Find module title and module description
             moduleTitle = module.find('h5')
             moduleDescription = module.find('div', {'class': "course-module-content-inner"})
+            print(module)
+            exit()
 
             # Storing module titles and module descriptions as plain text
             moduleTitleText = moduleTitle.text
-            moduleDescriptionText = moduleDescription.text.strip()
+            moduleDescriptionText = moduleDescription.text
 
             # Removing new lines from module descriptions
             moduleDescriptionText = moduleDescriptionText.replace('\n', '')
             moduleDescriptionText = moduleDescriptionText.replace('\r', '')
+
 
             # Removing spaces from the beginning and end of module titles
             moduleTitleText = moduleTitleText.strip()
 
             # Removing spaces from course level
             courseLevelText = courseLevelText.strip()
+
+            # Add duplicate of current module, except change the module title in the h5 tag
+            if '&' in moduleTitleText:
+                moduleTitleText = andFilter(moduleTitleText)
+            if type(moduleTitleText) is tuple:
+                print(moduleTitleText,  "  Original")
+                moduleTitleText = moduleTitleText[0]
+                print(moduleTitleText + "  Changed")
+                exit()
 
             moduleLevel = searchUndergraduate(moduleTitleText)
             moduleCode = None
@@ -133,37 +148,39 @@ def findModules():
             # if moduleTitleText in filterList:
             #     print("It is here", moduleTitleText)
             # Checks if a module title is in a dictionary
-            if moduleTitleText not in moduleTitleDesc:
+            if moduleTitleText not in moduleTitleDesc and moduleTitleText not in moduleTupleList:
 
                 # Separating classes into 1 and 2 as well as I and II
-                if type(moduleTitleText) is tuple:
-                    if courseLevelText == 'Undergraduate':
-                        for i in range(len(moduleTitleText)):
+                # if type(moduleTitleText) is tuple:
+                #     moduleTupleList.append(moduleTitleText)
+                #     for i in range(len(moduleTitleText)):
+                #         if courseLevelText == 'Undergraduate':
+                #          moduleLevel = searchUndergraduate(moduleTitleText[i])
+                #         elif courseLevelText == 'Postgraduate':
+                #             print()
+                #         if moduleLevel is not None:
+                #             moduleCode = moduleLevel[0]
+                #             moduleLevel = moduleLevel[1]
+                #         else:
+                #             moduleCode = None
+                #             moduleLevel = None
+                #
+                #         moduleTitleDesc[moduleTitleText[i]] = moduleDescriptionText
+                #         #print(moduleTitleDesc)
+                #
+                #
+                #         moduleInfo.append(moduleCode)
+                #         moduleInfo.append(moduleTitleText[i])
+                #         moduleInfo.append(moduleDescriptionText)
+                #         moduleInfo.append(courseLevelText)
+                #         moduleInfo.append(moduleLevel)
+                #         allModuleInfo.append(moduleInfo)
+                #
+                #         #print(moduleInfo)
+                #         moduleInfo = []
 
-                            moduleLevel = searchUndergraduate(moduleTitleText[i])
-                            if moduleLevel is not None:
-                                moduleCode = moduleLevel[0]
-                                moduleLevel = moduleLevel[1]
-                            else:
-                                moduleCode = None
-                                moduleLevel = None
-
-                            moduleTitleDesc[moduleTitleText[i]] = moduleDescriptionText
-                            #print(moduleTitleDesc)
 
 
-                            moduleInfo.append(moduleCode)
-                            moduleInfo.append(moduleTitleText[i])
-                            moduleInfo.append(moduleDescriptionText)
-                            moduleInfo.append(courseLevelText)
-                            moduleInfo.append(moduleLevel)
-                            allModuleInfo.append(moduleInfo)
-
-                            print(moduleInfo)
-                            moduleInfo = []
-
-
-                else:
                     # Add module title and description to the dictionary
                     moduleTitleDesc[moduleTitleText] = moduleDescriptionText
 
@@ -183,27 +200,64 @@ def findModules():
 
             # If module title is already in the dictionary
             else:
+
+                # if moduleTitleText in moduleTupleList:
+                #     for j in range(len(moduleTitleText)):
+                #         temp = moduleTitleText[j]
+                #         print(temp)
+                #         if courseLevelText == 'Undergraduate':
+                #             moduleLevel = searchUndergraduate(temp)
+                #         elif courseLevelText == 'Postgraduate':
+                #             print()
+                #         if moduleTitleDesc[temp] != moduleDescriptionText:
+                #             moduleCode = moduleLevel[0]
+                #             moduleLevel = moduleLevel[1]
+                #
+                #             currentModuleInfo = []
+                #             currentModuleInfo.append(moduleCode)
+                #             currentModuleInfo.append(temp)
+                #             currentModuleInfo.append(moduleTitleDesc[temp])
+                #             currentModuleInfo.append(courseLevelText)
+                #             currentModuleInfo.append(moduleLevel)
+                #
+                #             # Updates the module information
+                #             moduleInfo.append(moduleCode)
+                #             moduleInfo.append(temp)
+                #             moduleTitleDesc[temp] = moduleTitleDesc[temp] + moduleDescriptionText
+                #             moduleInfo.append(moduleTitleDesc[temp])
+                #             moduleInfo.append(courseLevelText)
+                #             moduleInfo.append(moduleLevel)
+                #             currentModuleIndex = allModuleInfo.index(currentModuleInfo)
+                #             allModuleInfo[currentModuleIndex] = moduleInfo
+                #
+                #             print("Things have changed")
+                #             print(moduleInfo)
+                #             moduleInfo = []
+                #
+
+
                 # Check if module description has changed from the current one
-                if moduleTitleDesc[moduleTitleText] != moduleDescriptionText:
-                    # Keeps a list of the currently stored module Information
-                    currentModuleInfo = []
-                    currentModuleInfo.append(moduleCode)
-                    currentModuleInfo.append(moduleTitleText)
-                    currentModuleInfo.append(moduleTitleDesc[moduleTitleText])
-                    currentModuleInfo.append(courseLevelText)
-                    currentModuleInfo.append(moduleLevel)
 
-                    # Updates the module information
-                    moduleInfo.append(moduleCode)
-                    moduleInfo.append(moduleTitleText)
-                    moduleTitleDesc[moduleTitleText] = moduleTitleDesc[moduleTitleText] + moduleDescriptionText
-                    moduleInfo.append(moduleTitleDesc[moduleTitleText])
-                    moduleInfo.append(courseLevelText)
-                    moduleInfo.append(moduleLevel)
-                    currentModuleIndex = allModuleInfo.index(currentModuleInfo)
-                    allModuleInfo[currentModuleIndex] = moduleInfo
+                    if moduleTitleDesc[moduleTitleText] != moduleDescriptionText:
+                        # Keeps a list of the currently stored module Information
+                            currentModuleInfo = []
+                            currentModuleInfo.append(moduleCode)
+                            currentModuleInfo.append(moduleTitleText)
+                            currentModuleInfo.append(moduleTitleDesc[moduleTitleText])
+                            currentModuleInfo.append(courseLevelText)
+                            currentModuleInfo.append(moduleLevel)
 
-        # break
+                            # Updates the module information
+                            moduleInfo.append(moduleCode)
+                            moduleInfo.append(moduleTitleText)
+                            moduleTitleDesc[moduleTitleText] = moduleTitleDesc[moduleTitleText] + moduleDescriptionText
+                            moduleInfo.append(moduleTitleDesc[moduleTitleText])
+                            moduleInfo.append(courseLevelText)
+                            moduleInfo.append(moduleLevel)
+                            currentModuleIndex = allModuleInfo.index(currentModuleInfo)
+                            allModuleInfo[currentModuleIndex] = moduleInfo
+
+        break
 
 
 def writeToCSV():
@@ -230,8 +284,10 @@ def writeToText():
     f.close()
 
 
+
+
 if __name__ == '__main__':
-    fillUndergraduateList()
+    #fillUndergraduateList()
     findModules()
     # searchUndergraduate('Strategy And Leadership')
 
