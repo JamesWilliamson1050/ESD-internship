@@ -30,10 +30,12 @@ headerInfo = ['Module Title', 'Module Description']
 undergraduateList = []
 postgraduateList = []
 
+filterList = ['Elective classes', 'Elective', 'Year 1', 'Transferable Skills']
+
 
 # Used to fill in the undergraduate Lisr
 def fillUndergraduateList():
-    with open('Class List Undergraduate 21-22.csv', 'r') as undergraduateCSV:
+    with open('Class List Undergradute 21-22.csv', 'r') as undergraduateCSV:
         reader = csv.reader(undergraduateCSV)
 
         for row in reader:
@@ -48,6 +50,24 @@ def searchUndergraduate(moduleSearchUG):
     for mod in undergraduateList:
         if moduleSearchUG in mod:
             return (mod[0], mod[3])
+
+
+def andFilter(string):
+    if '&' in string:
+        string = string.replace('&', 'And')
+    if '1 And 2' in string:
+        s1 = string.split('1')
+        s1 = s1[0]
+        s2 = s1 + '2'
+        s1 = s1 + '1'
+        string = s1, s2
+    if 'I And II' in string:
+        s1 = string.split('I')
+        s2 = s1[0] + 'Ii'
+        s1 = s1[0] + 'I'
+        string = s1, s2
+
+    return string
 
 
 def findModules():
@@ -78,7 +98,7 @@ def findModules():
 
             # Storing module titles and module descriptions as plain text
             moduleTitleText = moduleTitle.text
-            moduleDescriptionText = moduleDescription.text
+            moduleDescriptionText = moduleDescription.text.strip()
 
             # Removing new lines from module descriptions
             moduleDescriptionText = moduleDescriptionText.replace('\n', '')
@@ -90,32 +110,72 @@ def findModules():
             # Removing spaces from course level
             courseLevelText = courseLevelText.strip()
 
-
-            moduleLevel = None
+            moduleLevel = searchUndergraduate(moduleTitleText)
             moduleCode = None
             if courseLevelText == 'Undergraduate':
-                moduleLevel = searchUndergraduate(moduleTitleText)
                 if moduleLevel is not None:
                     moduleCode = moduleLevel[0]
                     moduleLevel = moduleLevel[1]
+                elif moduleLevel is None:
+                    if '&' in moduleTitleText:
+                        moduleTitleText = andFilter(moduleTitleText)
+                        moduleLevel = searchUndergraduate(moduleTitleText)
+                    if moduleLevel is not None:
+                        moduleCode = moduleLevel[0]
+                        moduleLevel = moduleLevel[1]
+                    else:
+                        moduleCode = None
+                        moduleLevel = None
 
             # Stores information on the current module
             moduleInfo = []
 
+            # if moduleTitleText in filterList:
+            #     print("It is here", moduleTitleText)
             # Checks if a module title is in a dictionary
             if moduleTitleText not in moduleTitleDesc:
-                # Add module title and description to the dictionary
-                moduleTitleDesc[moduleTitleText] = moduleDescriptionText
 
-                # Add any other relative information to a list, 'moduleInfo', then adds that list to a list of lists, 'allModuleInfo'
-                moduleInfo.append(moduleCode)
-                moduleInfo.append(moduleTitleText)
-                moduleInfo.append(moduleDescriptionText)
-                moduleInfo.append(courseLevelText)
-                moduleInfo.append(moduleLevel)
-                print(moduleInfo)
-                allModuleInfo.append(moduleInfo)
+                # Separating classes into 1 and 2 as well as I and II
+                if type(moduleTitleText) is tuple:
+                    if courseLevelText == 'Undergraduate':
+                        for i in range(len(moduleTitleText)):
+
+                            moduleLevel = searchUndergraduate(moduleTitleText[i])
+                            if moduleLevel is not None:
+                                moduleCode = moduleLevel[0]
+                                moduleLevel = moduleLevel[1]
+                            else:
+                                moduleCode = None
+                                moduleLevel = None
+
+                            moduleTitleDesc[moduleTitleText[i]] = moduleDescriptionText
+                            #print(moduleTitleDesc)
+
+
+                            moduleInfo.append(moduleCode)
+                            moduleInfo.append(moduleTitleText[i])
+                            moduleInfo.append(moduleDescriptionText)
+                            moduleInfo.append(courseLevelText)
+                            moduleInfo.append(moduleLevel)
+                            allModuleInfo.append(moduleInfo)
+
+                            print(moduleInfo)
+                            moduleInfo = []
+
+
+                else:
+                    # Add module title and description to the dictionary
+                    moduleTitleDesc[moduleTitleText] = moduleDescriptionText
+
+                    # Add any other relative information to a list, 'moduleInfo', then adds that list to a list of lists, 'allModuleInfo'
+                    moduleInfo.append(moduleCode)
+                    moduleInfo.append(moduleTitleText)
+                    moduleInfo.append(moduleDescriptionText)
+                    moduleInfo.append(courseLevelText)
+                    moduleInfo.append(moduleLevel)
+                    allModuleInfo.append(moduleInfo)
                 # print(moduleInfo)
+                # print(moduleTitleText)
 
                 # This can be ignored for now
                 # if 'Elective' in moduleTitleText:
@@ -133,7 +193,6 @@ def findModules():
                     currentModuleInfo.append(courseLevelText)
                     currentModuleInfo.append(moduleLevel)
 
-
                     # Updates the module information
                     moduleInfo.append(moduleCode)
                     moduleInfo.append(moduleTitleText)
@@ -144,7 +203,7 @@ def findModules():
                     currentModuleIndex = allModuleInfo.index(currentModuleInfo)
                     allModuleInfo[currentModuleIndex] = moduleInfo
 
-        break
+        # break
 
 
 def writeToCSV():
