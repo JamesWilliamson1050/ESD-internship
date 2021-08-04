@@ -47,10 +47,29 @@ def fillUndergraduateList():
 
 
 
+def fillPostgraduateList():
+    with open('Class List Postgraduate 21-22.csv', 'r') as postgraduateCSV:
+        reader = csv.reader(postgraduateCSV)
+
+        for row in reader:
+            if len(row) > 2:
+                postgraduateList.append(row)
+
+    postgraduateCSV.close()
+
+
+
 def searchUndergraduate(moduleSearchUG):
     # Returns the code and level of a course found in the class catalogue csv file
     for mod in undergraduateList:
         if moduleSearchUG.lower() == mod[1].lower():
+            return (mod[0], mod[3])
+
+
+
+def searchPostgraduate(moduleSearchPG):
+    for mod in postgraduateList:
+        if moduleSearchPG.lower() == mod[1].lower():
             return (mod[0], mod[3])
 
 
@@ -91,7 +110,11 @@ def findModules():
         courseURL = (defaultURL + course['href'])
 
         # Opens the course webpage, in a format that can be understood
-        coursePage = urlopen(courseURL)
+        try:
+            coursePage = urlopen(courseURL)
+        except Exception:
+            print("Could not open")
+
         courseHtml = coursePage.read().decode("utf-8")
 
         # Beings web scraping the current web page
@@ -126,37 +149,51 @@ def findModules():
             # Removing spaces from the beginning and end of module titles
             moduleTitleText = moduleTitleText.strip()
 
+            moduleDescriptionText = moduleDescriptionText.strip()
+
             # Removing spaces from course level
             courseLevelText = courseLevelText.strip()
 
+
+
             # Add duplicate of current module, except change the module title in the h5 tag
-            if '&':
-                moduleTitleText = andFilter(moduleTitleText)
-                if type(moduleTitleText) is tuple:
-                    t1 = moduleTitleText[0]
-                    tempTitle = moduleTitleText[1]
-                    moduleTitleText = t1
-                    temp = module
-                    modules.insert(modules.index(module) + 1, temp)
-                    titleChanged = True
+            # if '&':
+            #     moduleTitleText = andFilter(moduleTitleText)
+            #     if type(moduleTitleText) is tuple:
+            #         t1 = moduleTitleText[0]
+            #         tempTitle = moduleTitleText[1]
+            #         moduleTitleText = t1
+            #         temp = module
+            #         modules.insert(modules.index(module) + 1, temp)
+            #         titleChanged = True
 
 
             if courseLevelText == 'Undergraduate':
                 moduleLevel = searchUndergraduate(moduleTitleText)
+            elif 'Postgraduate' in courseLevelText:
+                moduleLevel = searchPostgraduate(moduleTitleText)
                 moduleCode = None
+            if moduleLevel is not None:
+                moduleCode = moduleLevel[0]
+                moduleLevel = moduleLevel[1]
+            elif moduleLevel is None:
+                if '&' in moduleTitleText:
+                    moduleTitleText = andFilter(moduleTitleText)
+                    if type(moduleTitleText) is tuple:
+                        t1 = moduleTitleText[0]
+                        tempTitle = moduleTitleText[1]
+                        moduleTitleText = t1
+                        temp = module
+                        modules.insert(modules.index(module) + 1, temp)
+                        titleChanged = True
+                        print(moduleTitleText)
+                    moduleLevel = searchUndergraduate(moduleTitleText)
                 if moduleLevel is not None:
                     moduleCode = moduleLevel[0]
                     moduleLevel = moduleLevel[1]
-                elif moduleLevel is None:
-                    if '&' in moduleTitleText:
-                        moduleTitleText = andFilter(moduleTitleText)
-                        moduleLevel = searchUndergraduate(moduleTitleText)
-                    if moduleLevel is not None:
-                        moduleCode = moduleLevel[0]
-                        moduleLevel = moduleLevel[1]
-                    else:
-                        moduleCode = None
-                        moduleLevel = None
+                else:
+                    moduleCode = None
+                    moduleLevel = None
             else:
                 print()
 
@@ -203,6 +240,9 @@ def findModules():
 
         #break
 
+
+def seperateClasses():
+    print()
 # Writes to a CSV file
 def writeToCSV():
     # Writing all module information to a csv file
@@ -231,6 +271,7 @@ def writeToText():
 
 if __name__ == '__main__':
     fillUndergraduateList()
+    fillPostgraduateList()
     findModules()
     writeToCSV()
     # searchUndergraduate('Strategy And Leadership')
