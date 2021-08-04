@@ -46,11 +46,16 @@ def fillUndergraduateList():
     undergraduateCSV.close()
 
 
+
 def searchUndergraduate(moduleSearchUG):
     # Returns the code and level of a course found in the class catalogue csv file
     for mod in undergraduateList:
-        if moduleSearchUG in mod:
+        if moduleSearchUG.lower() == mod[1].lower():
             return (mod[0], mod[3])
+
+
+
+
 
 
 def andFilter(string):
@@ -125,7 +130,7 @@ def findModules():
             courseLevelText = courseLevelText.strip()
 
             # Add duplicate of current module, except change the module title in the h5 tag
-            if '&' in moduleTitleText:
+            if '&':
                 moduleTitleText = andFilter(moduleTitleText)
                 if type(moduleTitleText) is tuple:
                     t1 = moduleTitleText[0]
@@ -198,7 +203,7 @@ def findModules():
 
         #break
 
-
+# Writes to a CSV file
 def writeToCSV():
     # Writing all module information to a csv file
     with open('moduleInfo2codes.csv', 'w', encoding='UTF8', newline='') as f:
@@ -209,6 +214,7 @@ def writeToCSV():
     f.close()
 
 
+# Writes to a text file
 def writeToText():
     # Writing module title and module description to text file
     with open('moduleInfo.txt', 'w', encoding='UTF8', newline='') as f:
