@@ -27,7 +27,7 @@ moduleTupleList = []
 allModuleInfo = []
 
 # Used for outputting headers of CSV file
-headerInfo = ['Module Title', 'Module Description']
+headerInfo = ['Code','Module Title', 'Module Description', 'Degree Level', 'Module Level' ]
 undergraduateList = []
 postgraduateList = []
 
@@ -100,6 +100,15 @@ def andFilter(string):
     return string
 
 
+def colonFilter(string):
+    if ';' in string:
+        string = string.replace(';', ':')
+    elif ':' in string:
+        string = string = string.replace(':', ';')
+    return string
+
+
+
 def findModules():
     # Loops through all courses
     titleChanged = False
@@ -167,35 +176,71 @@ def findModules():
             #         modules.insert(modules.index(module) + 1, temp)
             #         titleChanged = True
 
-
+            # Used to find course codes and levels
             if courseLevelText == 'Undergraduate':
                 moduleLevel = searchUndergraduate(moduleTitleText)
+                moduleCode = None
+                if moduleLevel is not None:
+                    print(moduleLevel, moduleTitleText)
+                    moduleCode = moduleLevel[0]
+                    moduleLevel = moduleLevel[1]
+                elif moduleLevel is None:
+                    if '&' in moduleTitleText:
+                        moduleTitleText = andFilter(moduleTitleText)
+                        if type(moduleTitleText) is tuple:
+                            t1 = moduleTitleText[0]
+                            tempTitle = moduleTitleText[1]
+                            moduleTitleText = t1
+                            temp = module
+                            modules.insert(modules.index(module) + 1, temp)
+                            titleChanged = True
+                        moduleLevel = searchUndergraduate(moduleTitleText)
+                    if moduleLevel is not None:
+                        moduleCode = moduleLevel[0]
+                        moduleLevel = moduleLevel[1]
+                    elif moduleLevel is None:
+                        if ';' in moduleTitleText or ':' in moduleTitleText:
+                            moduleTitleText = colonFilter(moduleTitleText)
+                            moduleLevel = searchUndergraduate(moduleTitleText)
+                            if moduleLevel is not None:
+                                moduleCode = moduleLevel[0]
+                                moduleLevel = moduleLevel[1]
+                            else:
+                                moduleCode = None
+                                moduleLevel = None
+
             elif 'Postgraduate' in courseLevelText:
                 moduleLevel = searchPostgraduate(moduleTitleText)
                 moduleCode = None
-            if moduleLevel is not None:
-                moduleCode = moduleLevel[0]
-                moduleLevel = moduleLevel[1]
-            elif moduleLevel is None:
-                if '&' in moduleTitleText:
-                    moduleTitleText = andFilter(moduleTitleText)
-                    if type(moduleTitleText) is tuple:
-                        t1 = moduleTitleText[0]
-                        tempTitle = moduleTitleText[1]
-                        moduleTitleText = t1
-                        temp = module
-                        modules.insert(modules.index(module) + 1, temp)
-                        titleChanged = True
-                        print(moduleTitleText)
-                    moduleLevel = searchUndergraduate(moduleTitleText)
                 if moduleLevel is not None:
                     moduleCode = moduleLevel[0]
                     moduleLevel = moduleLevel[1]
-                else:
-                    moduleCode = None
-                    moduleLevel = None
-            else:
-                print()
+                elif moduleLevel is None:
+                    if '&' in moduleTitleText:
+                        moduleTitleText = andFilter(moduleTitleText)
+                        if type(moduleTitleText) is tuple:
+                            t1 = moduleTitleText[0]
+                            tempTitle = moduleTitleText[1]
+                            moduleTitleText = t1
+                            temp = module
+                            modules.insert(modules.index(module) + 1, temp)
+                            titleChanged = True
+                        moduleLevel = searchPostgraduate(moduleTitleText)
+                    if moduleLevel is not None:
+                        moduleCode = moduleLevel[0]
+                        moduleLevel = moduleLevel[1]
+                    elif moduleLevel is None:
+                        if ';' in moduleTitleText or ':' in moduleTitleText:
+                            moduleTitleText = colonFilter(moduleTitleText)
+                            moduleLevel = searchPostgraduate(moduleTitleText)
+                            if moduleLevel is not None:
+                                moduleCode = moduleLevel[0]
+                                moduleLevel = moduleLevel[1]
+                            else:
+                                moduleCode = None
+                                moduleLevel = None
+
+
 
             # Stores information on the current module
             moduleInfo = []
@@ -274,7 +319,10 @@ if __name__ == '__main__':
     fillPostgraduateList()
     findModules()
     writeToCSV()
-    # searchUndergraduate('Strategy And Leadership')
+    #print(searchPostgraduate('Maritime Safety & Risk'))
+
+
+
 
 # writeToCSV()
 # writeToText()
