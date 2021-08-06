@@ -267,7 +267,7 @@ def findModules():
                     currentModuleIndex = allModuleInfo.index(currentModuleInfo)
                     allModuleInfo[currentModuleIndex] = moduleInfo
 
-        # break
+        break
 
 
 def seperateClasses():
@@ -295,7 +295,7 @@ def writeToText():
 
 
 
-            f.write(titleOfModule + ':' + descOfModule + '\n')
+            f.write("`" +titleOfModule +  "` " + " `" +  descOfModule + "`" + '\n')
         # write the header
 
     f.close()
@@ -312,8 +312,8 @@ def main():
 if __name__ == '__main__':
     fillUndergraduateList()
     fillPostgraduateList()
-
-    # findModules()
+    findModules()
+    writeToText()
     # writeToCSV()
     # print(searchPostgraduate('Maritime Safety & Risk'))
 

@@ -67,16 +67,18 @@ def readFromCSV(csvfile):
 def readFromTxt(txtfile):
     try:
         with open(txtfile, 'r') as txt_file:
-            for i in txt_file:
-                print(i)
+            for module in txt_file:
+                splitModule = module.split("`", 3)
+                moduleTitle = splitModule[1]
+                moduleDescription = splitModule[3]
+                print(moduleDescription)
             txt_file.close()
     except:
-        print("Text file opened")
+        print("Text file not in the correct format")
 
 
 def filterKeywords(moduleTitle, moduleDescription):
     sdg = {}
-
     moduleDescription = moduleDescription.lower().strip()
     with open("KEYWORDS.csv") as keywords_file:
 
@@ -127,8 +129,8 @@ def writeOutput(output):
 # Runs the program
 if __name__ == '__main__':
     output = {}
-    inspectFile('moduleInfo2codes.csv')
-    writeOutput(output)
+    inspectFile('moduleInfo.txt')
+    #writeOutput(output)
 
     # ws.main()
 
