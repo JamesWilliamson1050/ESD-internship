@@ -27,7 +27,7 @@ moduleTupleList = []
 allModuleInfo = []
 
 # Used for outputting headers of CSV file
-headerInfo = ['Code','Module Title', 'Module Description', 'Degree Level', 'Module Level' ]
+headerInfo = ['Code', 'Module Title', 'Module Description', 'Degree Level', 'Module Level']
 undergraduateList = []
 postgraduateList = []
 
@@ -46,7 +46,6 @@ def fillUndergraduateList():
     undergraduateCSV.close()
 
 
-
 def fillPostgraduateList():
     with open('Class List Postgraduate 21-22.csv', 'r') as postgraduateCSV:
         reader = csv.reader(postgraduateCSV)
@@ -58,7 +57,6 @@ def fillPostgraduateList():
     postgraduateCSV.close()
 
 
-
 def searchUndergraduate(moduleSearchUG):
     # Returns the code and level of a course found in the class catalogue csv file
     for mod in undergraduateList:
@@ -66,15 +64,10 @@ def searchUndergraduate(moduleSearchUG):
             return (mod[0], mod[3])
 
 
-
 def searchPostgraduate(moduleSearchPG):
     for mod in postgraduateList:
         if moduleSearchPG.lower() == mod[1].lower():
             return (mod[0], mod[3])
-
-
-
-
 
 
 def andFilter(string):
@@ -96,7 +89,6 @@ def andFilter(string):
         s1 = s1[0] + 'I'
         string = s1, s2
 
-
     return string
 
 
@@ -106,7 +98,6 @@ def colonFilter(string):
     elif ':' in string:
         string = string = string.replace(':', ';')
     return string
-
 
 
 def findModules():
@@ -163,8 +154,6 @@ def findModules():
             # Removing spaces from course level
             courseLevelText = courseLevelText.strip()
 
-
-
             # Add duplicate of current module, except change the module title in the h5 tag
             # if '&':
             #     moduleTitleText = andFilter(moduleTitleText)
@@ -181,7 +170,6 @@ def findModules():
                 moduleLevel = searchUndergraduate(moduleTitleText)
                 moduleCode = None
                 if moduleLevel is not None:
-                    print(moduleLevel, moduleTitleText)
                     moduleCode = moduleLevel[0]
                     moduleLevel = moduleLevel[1]
                 elif moduleLevel is None:
@@ -240,8 +228,6 @@ def findModules():
                                 moduleCode = None
                                 moduleLevel = None
 
-
-
             # Stores information on the current module
             moduleInfo = []
 
@@ -249,7 +235,6 @@ def findModules():
             #     print("It is here", moduleTitleText)
             # Checks if a module title is in a dictionary
             if moduleTitleText not in moduleTitleDesc and moduleTitleText not in moduleTupleList:
-
 
                 # Add module title and description to the dictionary
                 moduleTitleDesc[moduleTitleText] = moduleDescriptionText
@@ -261,8 +246,6 @@ def findModules():
                 moduleInfo.append(courseLevelText)
                 moduleInfo.append(moduleLevel)
                 allModuleInfo.append(moduleInfo)
-
-
 
                 if moduleTitleDesc[moduleTitleText] != moduleDescriptionText:
                     # Keeps a list of the currently stored module Information
@@ -283,11 +266,13 @@ def findModules():
                     currentModuleIndex = allModuleInfo.index(currentModuleInfo)
                     allModuleInfo[currentModuleIndex] = moduleInfo
 
-        #break
+        # break
 
 
 def seperateClasses():
     print()
+
+
 # Writes to a CSV file
 def writeToCSV():
     # Writing all module information to a csv file
@@ -302,11 +287,12 @@ def writeToCSV():
 # Writes to a text file
 def writeToText():
     # Writing module title and module description to text file
-    with open('moduleInfo.txt', 'w', encoding='UTF8', newline='') as f:
-        f.write(", ".join(headerInfo) + "\n")
+    with open('moduleInfo.txt', 'w', encoding="UTF8",  newline='') as f:
         for ModuleInfo in allModuleInfo:
-            titleOfModule = ModuleInfo[0]
-            descOfModule = ModuleInfo[1]
+            titleOfModule = ModuleInfo[1]
+            descOfModule = ModuleInfo[2]
+
+
 
             f.write(titleOfModule + ':' + descOfModule + '\n')
         # write the header
@@ -314,15 +300,21 @@ def writeToText():
     f.close()
 
 
-if __name__ == '__main__':
+def main():
+    print("Start")
     fillUndergraduateList()
     fillPostgraduateList()
     findModules()
-    writeToCSV()
-    #print(searchPostgraduate('Maritime Safety & Risk'))
+    writeToText()
+    print("End")
 
-
-
+if __name__ == '__main__':
+    fillUndergraduateList()
+    fillPostgraduateList()
+    print("Hello")
+    # findModules()
+    # writeToCSV()
+    # print(searchPostgraduate('Maritime Safety & Risk'))
 
 # writeToCSV()
 # writeToText()
@@ -330,6 +322,3 @@ if __name__ == '__main__':
 
 # read_file = pd.read_csv('text.txt')
 # read_file.to_csv(r'moduleInfo.csv', index=None)
-
-
-

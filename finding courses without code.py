@@ -257,6 +257,7 @@ def findModules():
                     #print(type(reader))
                     if row[0] == '':
                         print(row[1])
+                csv_file.close()
 
             # Stores information on the current module
             moduleInfo = []
