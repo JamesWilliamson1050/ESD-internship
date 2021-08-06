@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import csv
 
+
 # Loading the strathclyde website
 defaultURL = 'https://www.strath.ac.uk'
 
@@ -311,7 +312,7 @@ def main():
 if __name__ == '__main__':
     fillUndergraduateList()
     fillPostgraduateList()
-    print("Hello")
+
     # findModules()
     # writeToCSV()
     # print(searchPostgraduate('Maritime Safety & Risk'))

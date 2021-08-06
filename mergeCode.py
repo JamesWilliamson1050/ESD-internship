@@ -2,7 +2,7 @@ import csv
 import os
 
 import webscraper as ws
-import pandas
+import pandas as pd
 
 
 # kw = __import__('web outputs without electives')
@@ -22,42 +22,45 @@ def inspectFile(fileName):
 
 
 # Reads from a csv
+
 def readFromCSV(csvfile):
     try:
-        csv_file = open(csvfile, 'r')
+        csv_file = open(csvfile, 'r', encoding='utf-8')
     except:
         print("csv file could not be found")
-    try:
-        with csv_file:
-            reader = csv.reader(csv_file)
 
-            # Find out how to print column containing 'Module Title'. Probably just use an if
-            for col in reader:
+    with csv_file:
 
-                # Lists of possible ways the module title and description could be spelled
-                moduleTitle = ['Module Title', 'module title', 'Module title', 'module Title', 'Title', 'title']
-                moduleDescription = ['Module Description', 'module Description', 'Module Description',
-                                     'module Description',
-                                     'Description', 'description']
+        reader = csv.reader(csv_file)
 
-                # These lines check if any of the module titles and description are in the csv file
-                matchModuleTitle = next((mt for mt in moduleTitle if mt in col), False)
-                matchModuleDesc = next((md for md in moduleDescription if md in col), False)
+        # Find out how to print column containing 'Module Title'. Probably just use an if
+        moduleTitleList = ['Module Title', 'module title', 'Module title', 'module Title', 'Title', 'title']
+        moduleDescription = ['Module Description', 'module Description', 'Module Description',
+                             'module Description',
+                             'Description', 'description']
 
-                # Gets the index of the module title
-                if matchModuleTitle:
-                    indexMT = col.index(matchModuleTitle)
+        for col in reader:
 
-                # Gets the index of the module description
-                if matchModuleDesc:
-                    indexMD = col.index(matchModuleDesc)
+            # Lists of possible ways the module title and description could be spelled
+            # These lines check if any of the module titles and description are in the csv file
+            matchModuleTitle = next((mt for mt in moduleTitleList if mt in col), False)
+            matchModuleDesc = next((md for md in moduleDescription if md in col), False)
 
-                print(col[indexMT], col[indexMD])
+            # Gets the index of the module title
+            if matchModuleTitle:
+                indexMT = col.index(matchModuleTitle)
 
-        csv_file.close()
+            # Gets the index of the module description
+            if matchModuleDesc:
+                indexMD = col.index(matchModuleDesc)
 
-    except:
-        print("CSV file not in correct format")
+            moduleTitle = col[indexMT]
+            moduleDescription = col[indexMD]
+
+            if moduleTitle not in moduleTitleList:
+                filterKeywords(moduleTitle, moduleDescription)
+
+    csv_file.close()
 
 
 # Reads from a text file
@@ -71,9 +74,61 @@ def readFromTxt(txtfile):
         print("Text file opened")
 
 
+def filterKeywords(moduleTitle, moduleDescription):
+    sdg = {}
+
+    moduleDescription = moduleDescription.lower().strip()
+    with open("KEYWORDS.csv") as keywords_file:
+
+        for inc, line in enumerate(keywords_file.readlines()):
+            sdgNow = [word for word in line.lower().strip().split(',') if word not in ['', '\n', ' ']]
+            sdg[inc + 1] = sdgNow
+
+    keywords_file.close()
+
+    sdgList = []
+
+    for index in sdg.keys():
+
+        if any(word in moduleDescription for word in sdg[index]):
+
+            sdgList.append("YES")
+        else:
+            sdgList.append("NO")
+    output[moduleTitle] = sdgList
+
+
+
+
+def writeOutput(output):
+    with open('WebOutputs.csv', 'w', encoding="utf-8", newline='') as webOutputs:
+        header = ['Module Title']
+        toWrite = ''
+
+        for sdgNo in range(1, 18):
+            sdgHeader = 'SDG' + str(sdgNo)
+            header.append(sdgHeader)
+
+        writer = csv.writer(webOutputs)
+        writer.writerow(header)
+
+        for key in output.keys():
+            toWrite = toWrite + (key.replace(',', ';') + ',' + ','.join(output[key]) + '\n')
+
+        webOutputs.write(toWrite)
+
+
+
+
+
+    webOutputs.close()
+
+
 # Runs the program
 if __name__ == '__main__':
-    inspectFile('test.csv')
+    output = {}
+    inspectFile('moduleInfo2codes.csv')
+    writeOutput(output)
 
     # ws.main()
 

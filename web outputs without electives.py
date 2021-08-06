@@ -9,8 +9,7 @@ from urllib.request import urlopen
 
 
 
-def test1():
-    print("Hello this is test 1")
+
 
 with open("KEYWORDS.csv") as csv_file:
         sdg = {}
