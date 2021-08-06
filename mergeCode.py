@@ -16,7 +16,7 @@ def inspectFile(fileName):
     if fileName.endswith(csvExtension):
         readFromCSV(fileName)
     elif fileName.endswith(txtExtension):
-        readFromTxt()
+        readFromTxt(fileName)
     else:
         print("Sorry file is not in correct format. Make sure the file ends in .txt or .csv")
 
@@ -24,8 +24,11 @@ def inspectFile(fileName):
 # Reads from a csv
 def readFromCSV(csvfile):
     try:
-
-        with open(csvfile, 'r') as csv_file:
+        csv_file = open(csvfile, 'r')
+    except:
+        print("csv file could not be found")
+    try:
+        with csv_file:
             reader = csv.reader(csv_file)
 
             # Find out how to print column containing 'Module Title'. Probably just use an if
@@ -51,24 +54,26 @@ def readFromCSV(csvfile):
 
                 print(col[indexMT], col[indexMD])
 
-            csvfile.close()
+        csv_file.close()
+
     except:
-        print("csv file is not in correct format")
+        print("CSV file not in correct format")
 
 
 # Reads from a text file
 def readFromTxt(txtfile):
     try:
-        with open(txtfile, 'r') as txtfile:
-            print("text file opened")
-            txtfile.close()
+        with open(txtfile, 'r') as txt_file:
+            for i in txt_file:
+                print(i)
+            txt_file.close()
     except:
         print("Text file opened")
 
 
 # Runs the program
 if __name__ == '__main__':
-    inspectFile('moduleInfo2codes.csv')
+    inspectFile('test.csv')
 
     # ws.main()
 
