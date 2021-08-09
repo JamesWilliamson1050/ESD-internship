@@ -2,6 +2,7 @@ import csv
 import os
 
 import webscraper as ws
+import fillWebForm
 import pandas as pd
 
 
@@ -35,16 +36,20 @@ def readFromCSV(csvfile):
 
         # Find out how to print column containing 'Module Title'. Probably just use an if
         moduleTitleList = ['Module Title', 'module title', 'Module title', 'module Title', 'Title', 'title']
-        moduleDescription = ['Module Description', 'module Description', 'Module Description',
+        moduleDescriptionList = ['Module Description', 'module Description', 'Module Description',
                              'module Description',
                              'Description', 'description']
+        moduleCodeList = ['Code', 'code']
+        moduleCodeList = ['Code', 'code']
 
         for col in reader:
 
             # Lists of possible ways the module title and description could be spelled
             # These lines check if any of the module titles and description are in the csv file
             matchModuleTitle = next((mt for mt in moduleTitleList if mt in col), False)
-            matchModuleDesc = next((md for md in moduleDescription if md in col), False)
+            matchModuleDesc = next((md for md in moduleDescriptionList if md in col), False)
+            matchModuleCode = next((mc for mc in moduleCodeList if mc in col), False)
+
 
             # Gets the index of the module title
             if matchModuleTitle:
@@ -54,11 +59,26 @@ def readFromCSV(csvfile):
             if matchModuleDesc:
                 indexMD = col.index(matchModuleDesc)
 
+            if matchModuleCode:
+                indexMC = col.index(matchModuleCode)
+
             moduleTitle = col[indexMT]
             moduleDescription = col[indexMD]
+            moduleCode = col[indexMC]
+
+            print(moduleCode)
+
+            if moduleCode is None:
+                department.append('None')
+                faculty.append('None')
+            if moduleCode not in moduleCodeList and moduleCode is not None:
+                departmentPlusFaculty = fillWebForm.fillForm(moduleCode)
+                department.append(departmentPlusFaculty[0])
+                faculty.append(departmentPlusFaculty[1])
+                print(departmentPlusFaculty)
 
             if moduleTitle not in moduleTitleList:
-                filterKeywords(moduleTitle, moduleDescription)
+                filterKeywords(moduleTitle, moduleDescription, department, faculty)
 
     csv_file.close()
 
@@ -77,7 +97,7 @@ def readFromTxt(txtfile):
         print("Text file not in the correct format")
 
 
-def filterKeywords(moduleTitle, moduleDescription):
+def filterKeywords(moduleTitle, moduleDescription, moduleDepartment, moduleFaculty):
     sdg = {}
     moduleDescription = moduleDescription.lower().strip()
     with open("KEYWORDS.csv") as keywords_file:
@@ -114,10 +134,14 @@ def writeOutput(output):
         writer = csv.writer(webOutputs)
         writer.writerow(header)
 
+        count = 0
         for key in output.keys():
-            toWrite = toWrite + (key.replace(',', ';') + ',' + ','.join(output[key]) + '\n')
-
+            toWrite = toWrite + (key.replace(',', ';') + ',' + department[count] + ',' + ','.join(output[key]) + '\n')
+        count +=1
         webOutputs.write(toWrite)
+
+
+
 
 
 
@@ -129,7 +153,9 @@ def writeOutput(output):
 # Runs the program
 if __name__ == '__main__':
     output = {}
-    inspectFile('moduleInfo.txt')
+    department = []
+    faculty = []
+    inspectFile('moduleInfo2codes.csv')
     #writeOutput(output)
 
     # ws.main()

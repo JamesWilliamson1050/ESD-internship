@@ -46,18 +46,22 @@ def fillForm(Code):
 
     # Finding a printing the department of a module
     department = driver.find_element_by_xpath('//*[@id="commonContent"]/table[2]/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr[5]/td/table/tbody/tr[5]/td').text
-    print(department)
+
 
     faculty = driver.find_element_by_xpath('//*[@id="commonContent"]/table[2]/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr[5]/td/table/tbody/tr[6]/td').text
-    print(faculty)
+
 
 
     # Close driver
     driver.close()
 
+    return (department, faculty)
+
 
     # print(cookies)
 
 
-if __name__ == '__main__':
-    fillForm('CH106')
+
+
+# if __name__ == '__main__':
+#     test1()
