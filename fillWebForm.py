@@ -25,7 +25,7 @@ def fillForm(Code):
     #driver.close()
     # this waits to load the entire page
     time.sleep(0.3)
-    print(driver.page_source)
+
 
     # Used to find and click on accept cookies button
     cookies = driver.find_element_by_id('ccc-notify-accept')
@@ -44,7 +44,13 @@ def fillForm(Code):
     classTitleLink = driver.find_element_by_xpath('//*[@id="commonContent"]/table[4]/tbody/tr[2]/td[2]/a')
     classTitleLink.click()
 
-    time.sleep(2)
+    # Finding a printing the department of a module
+    department = driver.find_element_by_xpath('//*[@id="commonContent"]/table[2]/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr[5]/td/table/tbody/tr[5]/td').text
+    print(department)
+
+    faculty = driver.find_element_by_xpath('//*[@id="commonContent"]/table[2]/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr[5]/td/table/tbody/tr[6]/td').text
+    print(faculty)
+
 
     # Close driver
     driver.close()
@@ -54,4 +60,4 @@ def fillForm(Code):
 
 
 if __name__ == '__main__':
-    fillForm('AG409')
+    fillForm('CH106')
