@@ -68,17 +68,18 @@ def readFromCSV(csvfile):
 
             print(moduleCode)
 
-            if moduleCode is None:
-                department.append('None')
-                faculty.append('None')
-            if moduleCode not in moduleCodeList and moduleCode is not None:
-                departmentPlusFaculty = fillWebForm.fillForm(moduleCode)
-                department.append(departmentPlusFaculty[0])
-                faculty.append(departmentPlusFaculty[1])
-                print(departmentPlusFaculty)
+            if moduleCode == "":
+                department.append('Empty department')
+                faculty.append('Empty faculty')
+            else:
+
+                if moduleCode not in moduleCodeList and moduleCode is not None:
+                    departmentPlusFaculty = fillWebForm.fillForm(moduleCode)
+                    department.append(departmentPlusFaculty[0])
+                    faculty.append(departmentPlusFaculty[1])
 
             if moduleTitle not in moduleTitleList:
-                filterKeywords(moduleTitle, moduleDescription, department, faculty)
+                filterKeywords(moduleTitle, moduleDescription)
 
     csv_file.close()
 
@@ -97,7 +98,7 @@ def readFromTxt(txtfile):
         print("Text file not in the correct format")
 
 
-def filterKeywords(moduleTitle, moduleDescription, moduleDepartment, moduleFaculty):
+def filterKeywords(moduleTitle, moduleDescription):
     sdg = {}
     moduleDescription = moduleDescription.lower().strip()
     with open("KEYWORDS.csv") as keywords_file:
@@ -123,6 +124,7 @@ def filterKeywords(moduleTitle, moduleDescription, moduleDepartment, moduleFacul
 
 
 def writeOutput(output):
+
     with open('WebOutputs.csv', 'w', encoding="utf-8", newline='') as webOutputs:
         header = ['Module Title']
         toWrite = ''
@@ -153,8 +155,9 @@ def writeOutput(output):
 # Runs the program
 if __name__ == '__main__':
     output = {}
-    department = []
+    department = ['Pure And Applied Chemistry 1455b  rreg']
     faculty = []
+
     inspectFile('moduleInfo2codes.csv')
     #writeOutput(output)
 

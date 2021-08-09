@@ -10,7 +10,6 @@ CODE,TITLE,CREDITS,LEVEL,UG/PG/CE,SEMESTER,EXCHANGE,ELECTIVE
 EL103,Academic Listening,0,Level 1,Undergraduate,Full Year 2021/2022,Y,NE
 EL104,Academic Reading,0,Level 1,Undergraduate,Full Year 2021/2022,Y,NE
 BF111,Academic Skills,10,Level 1,Undergraduate,Full Year 2021/2022,N,NE
-MK104,Academic Skills,10,Level 1,Undergraduate,Full Year 2021/2022,Y,EO
 EL106,Academic Speaking,0,Level 1,Undergraduate,Full Year 2021/2022,Y,NE
 EL105,Academic Writing,0,Level 1,Undergraduate,Full Year 2021/2022,Y,NE
 OS174,Access To University Study (Pre-Entry Access Course),30,Level 1,Undergraduate,Full Year 2021/2022,N,NE
@@ -514,7 +513,6 @@ B6340,"Linguistics 3: Sociolinguistics, Multilingualism And Speech Acoustics",20
 X7312,Living In A Digital Age,10,Level 3,Undergraduate,Full Year 2021/2022,N,EO
 CS208,Logic And Algorithms,20,Level 2,Undergraduate,Full Year 2021/2022,Y,NE
 CS103,"Machines, Languages And Computation",20,Level 1,Undergraduate,Full Year 2021/2022,Y,PE
-BF101,Management Development Programme 1,20,Level 1,Undergraduate,Full Year 2021/2022,N,NE
 BF110,Management Development Programme 1,20,Level 1,Undergraduate,Full Year 2021/2022,N,NE
 BF202,Management Development Programme 2,20,Level 2,Undergraduate,Full Year 2021/2022,N,NE
 CC217,Management Development Programme 2 (Mdp2),20,Level 2,Undergraduate,Full Year 2021/2022,N,NE
@@ -1042,7 +1040,7 @@ M9477,Criminology (Clinical),20,Level 4,Undergraduate,Semester 1 2021/22,N,EO
 X7494,Critical Issues In Education,20,Level 4,Undergraduate,Semester 1 2021/22,Y,PE
 X7210,Culture Society Formation,20,Level 2,Undergraduate,Semester 1 2021/22,Y,PE
 X7341,Curricular Studies 1: Home Economics,20,Level 3,Undergraduate,Semester 1 2021/22,N,NE
-X7343,Curricular Studies 1: Technological Education,20,Level 3,Undergraduate,Semester 1 2021/22,Y,NE
+X7343,Curricular Studies 1: Technological Education,20,Level 3,Undergraduate,Semester 1 2021/22,N,NE
 X7342,Curricular Studies 2: Home Economics,20,Level 3,Undergraduate,Semester 1 2021/22,N,NE
 BM332,Cytology And Histology,10,Level 3,Undergraduate,Semester 1 2021/22,N,NE
 V1946,Dangerous Drugs And Magic Bullets: Social History Of Medicines 1800-2000,20,Level 4,Undergraduate,Semester 1 2021/22,N,NE
@@ -1275,6 +1273,7 @@ R1109,Introduction To French 1a,20,Level 1,Undergraduate,Semester 1 2021/22,Y,PE
 BM212,Introduction To Immunology,20,Level 2,Undergraduate,Semester 1 2021/22,Y,NE
 LC254,Introduction To Integrated Services,20,Level 2,Undergraduate,Semester 1 2021/22,N,NE
 MW264,Introduction To Integrated Services,20,Level 2,Undergraduate,Semester 1 2021/22,N,NE
+BF121,Introduction To International Business,10,Level 1,Undergraduate,Semester 1 2021/22,N,NE
 R3110,Introduction To Italian 1a,20,Level 1,Undergraduate,Semester 1 2021/22,Y,PE
 P3103,"Introduction To Journalism, Media And Communication 1a",20,Level 1,Undergraduate,Semester 1 2021/22,Y,PE
 BF118,Introduction To Marketing And Entrepreneurship,20,Level 1,Undergraduate,Semester 1 2021/22,N,PE
@@ -1286,7 +1285,6 @@ DM102,Introduction To Production Engineering And Management,20,Level 1,Undergrad
 B1111,Introduction To Research In Sport And Physical Activity,20,Level 1,Undergraduate,Semester 1 2021/22,Y,NE
 R4109,Introduction To Spanish 1a,20,Level 1,Undergraduate,Semester 1 2021/22,Y,PE
 BF112,Introduction To Tourism And Managing People,20,Level 1,Undergraduate,Semester 1 2021/22,N,PE
-BF121,Introductoion To International Business,10,Level 1,Undergraduate,Semester 1 2021/22,N,NE
 Z1403,Issues And Trends On Entrepreneurship,20,Level 4,Undergraduate,Semester 1 2021/22,N,NE
 M9416,Issues In Healthcare Law And Ethics,20,Level 4,Undergraduate,Semester 1 2021/22,N,EO
 M9482,"Issues In Healthcare, Law And Ethics (Clinical)",20,Level 4,Undergraduate,Semester 1 2021/22,N,EO
@@ -1605,6 +1603,7 @@ CH459,Understanding Molecules And Materials,5,Level 4,Undergraduate,Semester 1 2
 CH574,Understanding Molecules And Materials,5,Level 5,Undergraduate,Semester 1 2021/22,Y,NE
 L5115,Understanding Social Science And Social Research,20,Level 1,Undergraduate,Semester 1 2021/22,N,NE
 L5332,Understanding Welfare Reform,20,Level 3,Undergraduate,Semester 1 2021/22,Y,PE
+L2314,United States National Security Policy,20,Level 3,Undergraduate,Semester 1 2021/22,Y,PE
 L2405,United States National Security Policy,20,Level 4,Undergraduate,Semester 1 2021/22,N,EO
 22467,Urban Design 1,10,Level 4,Undergraduate,Semester 1 2021/22,Y,PE
 V1398,"Us Foreign Policy, 1945-1989",20,Level 3,Undergraduate,Semester 1 2021/22,Y,EO

@@ -270,8 +270,7 @@ def findModules():
         break
 
 
-def seperateClasses():
-    print()
+
 
 
 # Writes to a CSV file

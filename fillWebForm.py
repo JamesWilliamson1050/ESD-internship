@@ -24,7 +24,7 @@ def fillForm(Code):
     # assert "No results found." not in driver.page_source
     #driver.close()
     # this waits to load the entire page
-    time.sleep(0.3)
+    time.sleep(0.5)
 
 
     # Used to find and click on accept cookies button
