@@ -155,7 +155,7 @@ def writeOutput(output):
 # Runs the program
 if __name__ == '__main__':
     output = {}
-    department = ['Pure And Applied Chemistry 1455b  rreg']
+    department = []
     faculty = []
 
     inspectFile('moduleInfo2codes.csv')

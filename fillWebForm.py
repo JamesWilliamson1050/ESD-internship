@@ -2,33 +2,21 @@ import time
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
 
 # Come back to this later
 PATH = "C:\Program Files (x86)\chromedriver.exe"
 
 
-def getSite():
-    print()
-
-
 def fillForm(Code):
-
     driver = webdriver.Chrome(PATH)
     driver.get("https://but.mis.strath.ac.uk/classcatalogue/control/searchpage")
-    # assert "Python" in driver.title
-    # elem = driver.find_element_by_name("q")
-    # elem.clear()
-    # elem.send_keys("pycon")
-    # elem.send_keys(Keys.RETURN)
-    # assert "No results found." not in driver.page_source
-    #driver.close()
-    # this waits to load the entire page
-    time.sleep(0.5)
-
+    wait = WebDriverWait(driver, 10)
 
     # Used to find and click on accept cookies button
-    cookies = driver.find_element_by_id('ccc-notify-accept')
+    cookies = wait.until(ec.visibility_of_element_located((By.ID, 'ccc-notify-accept')))
     cookies.click()
 
     # Find and click on search link
@@ -45,23 +33,18 @@ def fillForm(Code):
     classTitleLink.click()
 
     # Finding a printing the department of a module
-    department = driver.find_element_by_xpath('//*[@id="commonContent"]/table[2]/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr[5]/td/table/tbody/tr[5]/td').text
+    department = driver.find_element_by_xpath(
+        '//*[@id="commonContent"]/table[2]/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr[5]/td/table/tbody/tr[5]/td').text
 
-
-    faculty = driver.find_element_by_xpath('//*[@id="commonContent"]/table[2]/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr[5]/td/table/tbody/tr[6]/td').text
-
-
+    faculty = driver.find_element_by_xpath(
+        '//*[@id="commonContent"]/table[2]/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr[5]/td/table/tbody/tr[6]/td').text
 
     # Close driver
     driver.close()
 
     return (department, faculty)
 
-
     # print(cookies)
 
-
-
-
-# if __name__ == '__main__':
-#     test1()
+if __name__ == '__main__':
+    fillForm("AG409")

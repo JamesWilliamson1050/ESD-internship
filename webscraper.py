@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import csv
 
-
 # Loading the strathclyde website
 defaultURL = 'https://www.strath.ac.uk'
 
@@ -32,10 +31,10 @@ headerInfo = ['Code', 'Module Title', 'Module Description', 'Degree Level', 'Mod
 undergraduateList = []
 postgraduateList = []
 
-filterList = ['Elective classes', 'Elective', 'Year 1', 'Transferable Skills', 'Course Summary']
+filterList = ['Elective classes', 'Elective class', 'Elective', 'Year 1', 'Transferable Skills', 'Course Summary']
 
 
-# Used to fill in the undergraduate Lisr
+# Used to fill in the undergraduate List
 def fillUndergraduateList():
     with open('Class List Undergradute 21-22.csv', 'r') as undergraduateCSV:
         reader = csv.reader(undergraduateCSV)
@@ -47,6 +46,7 @@ def fillUndergraduateList():
     undergraduateCSV.close()
 
 
+# Creates a list of all the postgraduate modules
 def fillPostgraduateList():
     with open('Class List Postgraduate 21-22.csv', 'r') as postgraduateCSV:
         reader = csv.reader(postgraduateCSV)
@@ -58,6 +58,7 @@ def fillPostgraduateList():
     postgraduateCSV.close()
 
 
+# Searches for a module title in the list of undergraduate modules
 def searchUndergraduate(moduleSearchUG):
     # Returns the code and level of a course found in the class catalogue csv file
     for mod in undergraduateList:
@@ -65,12 +66,14 @@ def searchUndergraduate(moduleSearchUG):
             return (mod[0], mod[3])
 
 
+# Searches the postgraduate list for a moduleTitle
 def searchPostgraduate(moduleSearchPG):
     for mod in postgraduateList:
         if moduleSearchPG.lower() == mod[1].lower():
-            return (mod[0], mod[3])
+            return mod[0], mod[3]
 
 
+# Filters
 def andFilter(string):
     if '&' and 'And' in string:
         return string
@@ -140,7 +143,6 @@ def findModules():
 
             if titleChanged:
                 moduleTitleText = tempTitle
-
                 titleChanged = False
 
             # Removing new lines from module descriptions
@@ -155,16 +157,7 @@ def findModules():
             # Removing spaces from course level
             courseLevelText = courseLevelText.strip()
 
-            # Add duplicate of current module, except change the module title in the h5 tag
-            # if '&':
-            #     moduleTitleText = andFilter(moduleTitleText)
-            #     if type(moduleTitleText) is tuple:
-            #         t1 = moduleTitleText[0]
-            #         tempTitle = moduleTitleText[1]
-            #         moduleTitleText = t1
-            #         temp = module
-            #         modules.insert(modules.index(module) + 1, temp)
-            #         titleChanged = True
+
 
             # Used to find course codes and levels
             if courseLevelText == 'Undergraduate':
@@ -235,7 +228,7 @@ def findModules():
             # if moduleTitleText in filterList:
             #     print("It is here", moduleTitleText)
             # Checks if a module title is in a dictionary
-            if moduleTitleText not in moduleTitleDesc and moduleTitleText not in moduleTupleList:
+            if moduleTitleText not in moduleTitleDesc and moduleTitleText not in filterList:
 
                 # Add module title and description to the dictionary
                 moduleTitleDesc[moduleTitleText] = moduleDescriptionText
@@ -267,11 +260,6 @@ def findModules():
                     currentModuleIndex = allModuleInfo.index(currentModuleInfo)
                     allModuleInfo[currentModuleIndex] = moduleInfo
 
-        break
-
-
-
-
 
 # Writes to a CSV file
 def writeToCSV():
@@ -287,14 +275,12 @@ def writeToCSV():
 # Writes to a text file
 def writeToText():
     # Writing module title and module description to text file
-    with open('moduleInfo.txt', 'w', encoding="UTF8",  newline='') as f:
+    with open('moduleInfo.txt', 'w', encoding="UTF8", newline='') as f:
         for ModuleInfo in allModuleInfo:
             titleOfModule = ModuleInfo[1]
             descOfModule = ModuleInfo[2]
 
-
-
-            f.write("`" +titleOfModule +  "` " + " `" +  descOfModule + "`" + '\n')
+            f.write("`" + titleOfModule + "` " + " `" + descOfModule + "`" + '\n')
         # write the header
 
     f.close()
@@ -308,12 +294,13 @@ def main():
     writeToText()
     print("End")
 
+
 if __name__ == '__main__':
     fillUndergraduateList()
     fillPostgraduateList()
     findModules()
-    writeToText()
-    # writeToCSV()
+    # writeToText()
+    writeToCSV()
     # print(searchPostgraduate('Maritime Safety & Risk'))
 
 # writeToCSV()

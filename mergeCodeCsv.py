@@ -9,7 +9,7 @@ import csv
 import os
 
 #import webscraper as ws
-#import fillWebForm
+import fillWebForm
 import pandas as pd
 
 
@@ -73,19 +73,22 @@ def readFromCSV(csvfile):
             moduleDescription = col[indexMD]
             moduleCode = col[indexMC]
 
-            print(moduleCode)
+            if moduleCode == "":
+                department.append('Empty department')
+                faculty.append('Empty faculty')
+            else:
 
-            if moduleCode is None:
-                department.append('None')
-                faculty.append('None')
-            if moduleCode not in moduleCodeList and moduleCode is not None:
-                departmentPlusFaculty = ["AH55", "AH54"] #fillWebForm.fillForm(moduleCode)
-                department.append(departmentPlusFaculty[0])
-                faculty.append(departmentPlusFaculty[1])
-                print(departmentPlusFaculty)
+                if moduleCode not in moduleCodeList and moduleCode is not None:
+                    print(moduleCode)
+                    departmentPlusFaculty = fillWebForm.fillForm(moduleCode)
+                    department.append(departmentPlusFaculty[0])
+                    faculty.append(departmentPlusFaculty[1])
+
+
 
             if moduleTitle not in moduleTitleList:
                 filterKeywords(moduleTitle, moduleDescription, department, faculty)
+
 
     csv_file.close()
 
@@ -129,11 +132,14 @@ def filterKeywords(moduleTitle, moduleDescription, moduleDepartment, moduleFacul
 def writeOutput(output):
     with open('WebOutputs.csv', 'w', encoding="utf-8", newline='') as webOutputs:
         writer = csv.writer(webOutputs)
-        writer.writerow(["Module Title", "Module Code"] + [("SDG" + str(sdgNo)) for sdgNo in range(1, 18)])
+        writer.writerow(["Module Title", "Department"] + [("SDG" + str(sdgNo)) for sdgNo in range(1, 18)])
         
         for count, key in enumerate(output.keys()): 
             writer.writerow([key.replace(',', ';'), department[count]] + output[key])
-    
+
+        #print(department)
+
+        webOutputs.close()
 
 # Runs the program
 if __name__ == '__main__':
