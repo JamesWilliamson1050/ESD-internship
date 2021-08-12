@@ -19,6 +19,8 @@ soup = BeautifulSoup(defaultHtml, 'lxml')
 # Basically finds all the classes individual extensions and stores them in a variable
 courses = soup.find_all('a', class_="course-search-result__link")
 
+exit()
+
 # A dictionary with the module titles as the keys and module descriptions as values
 moduleTitleDesc = dict()
 moduleTupleList = []
@@ -31,7 +33,9 @@ headerInfo = ['Module Title', 'Module Description', 'Degree Level']
 undergraduateList = []
 postgraduateList = []
 
-filterList = ['Elective classes', 'Elective class', 'Elective', 'Year 1', 'Transferable Skills', 'Course Summary']
+filterList = set(['elective classes', 'elective class', 'elective', 'year 1', 'transferable skills', 'course summary',
+                  'year 1 - fundamentals', 'year 2 - core chemical engineering', 'year 4 - chemical engineering design',
+                  'year 2', 'year 3', 'year 4', 'year 5 - advanced chemical engineering', 'year abroad'])
 
 
 # Used to fill in the undergraduate List
@@ -167,7 +171,7 @@ def findModules():
             # if moduleTitleText in filterList:
             #     print("It is here", moduleTitleText)
             # Checks if a module title is in a dictionary
-            if moduleTitleText not in moduleTitleDesc and moduleTitleText not in filterList:
+            if moduleTitleText not in moduleTitleDesc and moduleTitleText.lower() not in filterList:
 
                 # Add module title and description to the dictionary
                 moduleTitleDesc[moduleTitleText] = moduleDescriptionText
