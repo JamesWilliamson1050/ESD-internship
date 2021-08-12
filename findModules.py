@@ -1,0 +1,1 @@
+# Rewriting web scraping to only web scrape and store data as CSV
