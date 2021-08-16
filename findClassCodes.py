@@ -68,7 +68,7 @@ def updateModuleData(webScrapedcsvFile):
                 moduleLevel = moduleSearch[1]
                 df.at[index, 'Module Code'] = moduleCode
                 df.at[index, 'Module Level'] = moduleLevel
-    df = df.sort_values('Degree Level')
+    df = df.sort_values('Degree Level', ascending=False)
     df.to_csv('moduleInfoClassCodes.csv', sep=',', encoding="utf-8", index=False)
 
 
