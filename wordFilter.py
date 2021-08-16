@@ -27,6 +27,29 @@ def andFilter(string):
         s1 = s1[0] + 'I'
         string = s1, s2
 
+
+    return string
+
+
+def numberFilter(string):
+    if '1 And 2' in string:
+        s1 = string.split('1')
+        s1 = s1[0]
+        s2 = s1 + '2'
+        s1 = s1 + '1'
+        string = s1, s2
+    elif '1 & 2' in string:
+        s1 = string.split('1')
+        s1 = s1[0]
+        s2 = s1 + '2'
+        s1 = s1 + '1'
+        string = s1, s2
+
+    if 'I And II' in string:
+        s1 = string.split('I')
+        s2 = s1[0] + 'Ii'
+        s1 = s1[0] + 'I'
+        string = s1, s2
     return string
 
 def colonFilter(string):
@@ -37,5 +60,11 @@ def colonFilter(string):
     return string
 
 if __name__ == '__main__':
-    print(andFilter('Forensic Science Principles And Practice Parts 1 And 2'))
-    print(colonFilter('Chemical Engineering: Fundamentals, Techniques And Tools'))
+    #print(andFilter('Forensic Science Principles And Practice Parts 1 And 2'))
+    #print(andFilter('Chemical Engineering: Fundamentals, Techniques and Tools'))
+    print(andFilter('Understanding & Optimising Business Systems'))
+
+
+
+
+

@@ -35,7 +35,7 @@ postgraduateList = []
 
 filterList = set(['elective classes', 'elective class', 'elective', 'year 1', 'transferable skills', 'course summary',
                   'year 1 - fundamentals', 'year 2 - core chemical engineering', 'year 4 - chemical engineering design',
-                  'year 2', 'year 3', 'year 4', 'year 5 - advanced chemical engineering', 'year abroad'])
+                  'year 2', 'year 3', 'year 4', 'year 5 - advanced chemical engineering', 'year abroad', 'Year 3 Course Summary', 'Year 4 Course Summary'])
 
 
 # Used to fill in the undergraduate List
