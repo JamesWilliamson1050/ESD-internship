@@ -26,6 +26,9 @@ def updateModuleData(webScrapedcsvFile):
 
         # If a module has a single module code it's type is a string
         if moduleCodeType == str:
+            # TODO fix updating module information
+            print(row['Module Code'])
+            exit()
             df.at[index, 'Module Code'] = moduleCode
             df.at[index, 'Module Level'] = moduleLevel
 
@@ -84,9 +87,15 @@ def updateModuleData(webScrapedcsvFile):
                         tempRow['Module Code', 'Module Level'] = [moduleCode[i], moduleLevel[i]]
                         df = df.append(tempRow)
 
-                # elif moduleCode is None:
-                #     # print(moduleTitle.encode("utf-8"), moduleCode, moduleLevel)
-                #     print()
+                elif moduleCode is None:
+                    moduleTitle = wordFilter.colonFilter(moduleTitle)
+                    moduleSearch = degreeSearch(moduleTitle)
+                    moduleCode = moduleSearch[0]
+                    moduleLevel = moduleSearch[1]
+                    moduleCodeType = type(moduleCode)
+                    df.at[index, 'Module Code'] = moduleCode
+                    df.at[index, 'Module Level'] = moduleLevel
+
 
 
 
@@ -108,20 +117,17 @@ def readUGCSV():
         return df
     except Exception:
         print("Undergraduate CSV file not found")
-    df.close()
 
 
 def readPGCSV():
     try:
-        dataframe = pd.read_csv('Class List Postgraduate 21-22.csv', sep=',', encoding="utf-8")
+        df = pd.read_csv('Class List Postgraduate.csv')
         header_row = 7
-        print(dataframe)
-
-        dataframe.columns = dataframe.iloc[header_row]
-        return dataframe
+        df.columns = df.iloc[header_row]
+        return df
     except Exception:
         print("Postgraduate CSV file not found")
-    dataframe.close()
+
 
 
 def searchUndergraduateClassList(moduleTitle):
@@ -145,27 +151,24 @@ def searchUndergraduateClassList(moduleTitle):
 
 def searchPostgraduateClassList(moduleTitle):
     df = readPGCSV()
-    print(df)
-    # df['TITLE']
-    # search = df['TITLE'] == moduleTitle
-    # moduleCodes = df.loc[search]['CODE']
-    # moduleCode = moduleCodes.values
-    # moduleLevels = df.loc[search]['LEVEL']
-    # moduleLevel = moduleLevels.values
-    #
-    # if moduleCode.size == 0:
-    #     moduleCode = None
-    #     moduleLevel = None
-    # elif moduleCode.size == 1:
-    #     moduleCode = moduleCode[0]
-    #     moduleLevel = moduleLevel[0]
-    #
-    # return moduleCode, moduleLevel
+    df['TITLE']
+    search = df['TITLE'] == moduleTitle
+    moduleCodes = df.loc[search]['CODE']
+    moduleCode = moduleCodes.values
+    moduleLevels = df.loc[search]['LEVEL']
+    moduleLevel = moduleLevels.values
+
+    if moduleCode.size == 0:
+        moduleCode = None
+        moduleLevel = None
+    elif moduleCode.size == 1:
+        moduleCode = moduleCode[0]
+        moduleLevel = moduleLevel[0]
+
+    return moduleCode, moduleLevel
 
 def writeToCSV(dataframe):
     print()
-
-
 
 
 
@@ -174,6 +177,6 @@ if __name__ == '__main__':
     # fillUndergraduateList()
     # searchUndergraduate('Year 3 Pedagogy And Placement Learning - Nursery')
     # print(searchUndergraduateClassList('Professional Skills: Curriculum And Pedagogy Chemistry 1'))
-    print(searchPostgraduateClassList(''))
+    # print(searchPostgraduateClassList('5g Communications Networks'))
     # print(searchUndergraduateClassList(''))
-    #updateModuleData('webScraping.csv')
+    updateModuleData('webScraping.csv')
