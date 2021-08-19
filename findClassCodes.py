@@ -27,8 +27,8 @@ def updateModuleData(webScrapedcsvFile):
         # If a module has a single module code it's type is a string
         if moduleCodeType == str:
             # TODO fix updating module information
-            print(row['Module Code'])
-            exit()
+
+
             df.at[index, 'Module Code'] = moduleCode
             df.at[index, 'Module Level'] = moduleLevel
 
