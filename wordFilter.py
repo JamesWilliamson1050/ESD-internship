@@ -59,10 +59,26 @@ def colonFilter(string):
         string = string = string.replace(':', ';')
     return string
 
+
+def bracketFilter(string):
+    string = string.lower()
+
+    if "(10 credits)" in string:
+        string = string.replace("(10 credits)", '')
+    if '(10-credit class)' in string:
+        string = string.replace('(10-credit class)', '')
+    if "(20 credits)" in string:
+        string = string.replace("(20 credits)", '')
+    if "(20-credits)" in string:
+        string = string.replace("(20-credit class)", '')
+
+    return string
+
+
 if __name__ == '__main__':
     #print(andFilter('Forensic Science Principles And Practice Parts 1 And 2'))
     #print(andFilter('Chemical Engineering: Fundamentals, Techniques and Tools'))
-    print(andFilter('Understanding & Optimising Business Systems'))
+    print(bracketFilter('Social Research Methods (10-Credit class)'))
 
 
 

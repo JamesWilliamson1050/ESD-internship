@@ -17,92 +17,87 @@ def updateModuleData(webScrapedcsvFile):
         # Searching for module depending on degree level
         degreeSearch = 'search' + degreeLevel + 'ClassList'
         degreeSearch = eval(degreeSearch)
+
+        # if '(' in moduleTitle:
+        #     moduleTitle = wordFilter.bracketFilter(moduleTitle)
+
+
         moduleSearch = degreeSearch(moduleTitle)
         moduleCode = moduleSearch[0]
         moduleLevel = moduleSearch[1]
         moduleCodeType = type(moduleCode)
 
-
-
-        # If a module has a single module code it's type is a string
         if moduleCodeType == str:
-            # TODO fix updating module information
+            row['Module Code'] = moduleCode
+            row['Module Level'] = moduleLevel
 
-
-            df.at[index, 'Module Code'] = moduleCode
-            df.at[index, 'Module Level'] = moduleLevel
-
-        # If a module code has multiple values then it is an array
         elif moduleCodeType == numpy.ndarray:
-            for i in range(len(moduleCode)):
-                tempRow = row
-                tempRow['Module Code', 'Module Level'] = [moduleCode[i], moduleLevel[i]]
+            row['Module Code'] = moduleCode[0]
+            row['Module Level'] = moduleLevel[0]
 
-                df = df.append(tempRow)
-
-        # Module code hasn't been found
         elif moduleCode is None:
-            moduleTitle = wordFilter.andFilter(moduleTitle)
-
-
-            # If course has been split into 2
-            if type(moduleTitle) is tuple:  #
-
-                # The titles of the 2 courses
-                title1 = moduleTitle[0]
-                title2 = moduleTitle[1]
-
-                # Keeping a copy of the current row
-                tempRow = row.copy()
-
-                # Setting the titles of the row and copy of the row to the new courses
-                row['Module Title'] = title1
-                tempRow['Module Title'] = title2
-
-                # Searching for the course title
-                moduleSearch = degreeSearch(title1)
-                moduleCode = moduleSearch[0]
-                moduleLevel = moduleSearch[1]
-                row['Module Code'] = moduleCode
-                row['Module Level'] = moduleLevel
-
-                moduleSearch = degreeSearch(title2)
-                moduleCode = moduleSearch[0]
-                moduleLevel = moduleSearch[1]
-                tempRow['Module Code'] = moduleCode
-                tempRow['Module Level'] = moduleLevel
-
-                df = df.append(tempRow)
-
-            elif type(moduleTitle) == str:
+                moduleTitle = wordFilter.andFilter(moduleTitle)
                 moduleSearch = degreeSearch(moduleTitle)
                 moduleCode = moduleSearch[0]
                 moduleLevel = moduleSearch[1]
                 moduleCodeType = type(moduleCode)
 
+                if moduleCodeType == str:
+                    row['Module Code'] = moduleCode
+                    row['Module Level'] = moduleLevel
+                    row['Module Title'] = moduleTitle
 
-                if moduleCodeType == numpy.ndarray:
-                    for i in range(len(moduleCode)):
-                        tempRow = row
-                        tempRow['Module Code', 'Module Level'] = [moduleCode[i], moduleLevel[i]]
-                        df = df.append(tempRow)
+
+                elif moduleCodeType == numpy.ndarray:
+                    row['Module Code'] = moduleCode[0]
+                    row['Module Level'] = moduleLevel[0]
+                    row['Module Title'] = moduleTitle
 
                 elif moduleCode is None:
-                    moduleTitle = wordFilter.colonFilter(moduleTitle)
-                    moduleSearch = degreeSearch(moduleTitle)
-                    moduleCode = moduleSearch[0]
-                    moduleLevel = moduleSearch[1]
-                    moduleCodeType = type(moduleCode)
-                    df.at[index, 'Module Code'] = moduleCode
-                    df.at[index, 'Module Level'] = moduleLevel
+                    if ';' in moduleTitle or ':' in moduleTitle:
+                        moduleTitle = wordFilter.colonFilter(moduleTitle)
+                        moduleSearch = degreeSearch(moduleTitle)
+                        moduleCode = moduleSearch[0]
+                        moduleLevel = moduleSearch[1]
+                        moduleCodeType = type(moduleCode)
+
+                        if moduleCodeType == str:
+                            row['Module Code'] = moduleCode
+                            row['Module Level'] = moduleLevel
+                            row['Module Title'] = moduleTitle
+
+
+                        elif moduleCodeType == numpy.ndarray:
+                            row['Module Code'] = moduleCode[0]
+                            row['Module Level'] = moduleLevel[0]
+                            row['Module Title'] = moduleTitle
+
+        elif '&' not in moduleTitle or 'And' not in moduleTitle:
+            if ';' in moduleTitle or ':' in moduleTitle:
+                moduleTitle = wordFilter.colonFilter(moduleTitle)
+                moduleSearch = degreeSearch(moduleTitle)
+                moduleCode = moduleSearch[0]
+                moduleLevel = moduleSearch[1]
+                moduleCodeType = type(moduleCode)
+
+                if moduleCodeType == str:
+                    row['Module Code'] = moduleCode
+                    row['Module Level'] = moduleLevel
+                    row['Module Title'] = moduleTitle
+
+
+                elif moduleCodeType == numpy.ndarray:
+                    row['Module Code'] = moduleCode[0]
+                    row['Module Level'] = moduleLevel[0]
+                    row['Module Title'] = moduleTitle
 
 
 
+    df = df.sort_values('Module Code', ascending=False)
+    writeToCSV(df)
 
 
-
-    df = df.sort_values('Degree Level', ascending=False)
-    df.to_csv('moduleInfoClassCodes.csv', sep=',', encoding="utf-8", index=False)
+    #
 
     # Add in filtering code and search for the data again
     # break
@@ -121,7 +116,7 @@ def readUGCSV():
 
 def readPGCSV():
     try:
-        df = pd.read_csv('Class List Postgraduate.csv')
+        df = pd.read_csv('Class List Postgraduate 21-22.csv')
         header_row = 7
         df.columns = df.iloc[header_row]
         return df
@@ -129,11 +124,10 @@ def readPGCSV():
         print("Postgraduate CSV file not found")
 
 
-
 def searchUndergraduateClassList(moduleTitle):
     df = readUGCSV()
-    df['TITLE']
-    search = df['TITLE'] == moduleTitle
+    title = df['TITLE']
+    search = title == moduleTitle
     moduleCodes = df.loc[search]['CODE']
     moduleCode = moduleCodes.values
     moduleLevels = df.loc[search]['LEVEL']
@@ -167,9 +161,9 @@ def searchPostgraduateClassList(moduleTitle):
 
     return moduleCode, moduleLevel
 
-def writeToCSV(dataframe):
-    print()
 
+def writeToCSV(dataframe):
+    dataframe.to_csv('moduleInfoClassCodes.csv', sep=',', encoding="utf-8", index=False)
 
 
 
