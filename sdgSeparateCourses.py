@@ -6,12 +6,14 @@ def readCSV():
     with open('SeparateCourses.csv', 'r', encoding="utf-8") as csv_file:
         reader = csv.reader(csv_file)
         for r in reader:
-            #print(len(r[1]))
+
             if r != [' ']:
                 course.append(r)
+
             elif r == [' ']:
                 separateModuleInfo(course)
                 course.clear()
+
                 # Pass info to another function
 
         csv_file.close()
@@ -23,13 +25,18 @@ def separateModuleInfo(course):
     if len(course) >=1:
         courseTitle = course[0]
         modules = course[1:]
+
+
+        # Write the course title to a csv file
         with open('sdgSeparateCourses.csv', 'a', encoding="utf-8", newline='') as sdgSeparate:
             writer = csv.writer(sdgSeparate)
             writer.writerow(courseTitle)
+
+
         for module in modules:
-            moduleTitle = module[1]
-            moduleDesc = module[2]
-            degreeLevel = module[3]
+            moduleTitle = module[2]
+            moduleDesc = module[3]
+            degreeLevel = module[4]
             output = filterKeywords(moduleTitle, moduleDesc)
 
             for key in output.keys():
