@@ -16,7 +16,7 @@ def searchForDepAndFac():
     moudleCodes = df['Module Code']
     df['Department'] = ''
     df['Faculty'] = ''
-    print(df.columns)
+
 
     # TODO finish adding the faculty and department of a module
     # TODO Make sure that the department and faculty are being added as headers
@@ -24,14 +24,26 @@ def searchForDepAndFac():
     # Iterate over the df
     # For ever code that is a string pass it to the form filler function from webFormFiller module
     # Extract the department and faculty
-    # Add the to data frame (Probably use the in build pandas function at and use the current index to do this)
+    # Add them to data frame (Probably use the in build pandas function at and use the current index to do this)
     # Then you need to write the dataframe to a CSV file
 
-    for mc in moudleCodes:
+
+
+    for index, row in df.iterrows():
+        # Current module code
+        mc = row['Module Code']
         if type(mc) == str:
-            department, faculty = wf.fillForm(mc)
-            df['Department'] = department
-            break
+             department, faculty = wf.fillForm(mc)
+             row['Department'] = department
+             row['Faculty'] = faculty
+
+
+    writeToCSV(df)
+
+
+
+def writeToCSV(dataframe):
+        dataframe.to_csv('moduleInfoAll.csv', sep=',', encoding="utf-8", index=False)
 
 
 
