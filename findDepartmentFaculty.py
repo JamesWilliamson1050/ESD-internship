@@ -18,17 +18,6 @@ def searchForDepAndFac():
     df['Faculty'] = ''
 
 
-    # TODO finish adding the faculty and department of a module
-    # TODO Make sure that the department and faculty are being added as headers
-    # Potential solution
-    # Iterate over the df
-    # For ever code that is a string pass it to the form filler function from webFormFiller module
-    # Extract the department and faculty
-    # Add them to data frame (Probably use the in build pandas function at and use the current index to do this)
-    # Then you need to write the dataframe to a CSV file
-
-
-
     for index, row in df.iterrows():
         # Current module code
         mc = row['Module Code']
