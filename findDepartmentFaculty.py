@@ -36,6 +36,8 @@ def writeToCSV(dataframe):
 
 
 
+# TODO potentially rewrite this with the old code because this is slow and doesn't work
+# Maybe try and keep the dataframe stuff and make it work with the old code
 
 if __name__ == '__main__':
     searchForDepAndFac()

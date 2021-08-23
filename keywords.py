@@ -86,6 +86,6 @@ def writeOutput(list):
 
 
 if __name__ == '__main__':
-    dataframe = readCSV('moduleInfoAll.csv')
+    dataframe = readCSV('moduleInfoClassCodes.csv')
     findTitleAndDesc()
 
