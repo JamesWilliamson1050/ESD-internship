@@ -1,3 +1,5 @@
+import time
+
 import pandas as pd
 
 
@@ -10,7 +12,7 @@ def readCSV(csvFile):
 
 
 def findTitleAndDesc():
-    moduleTitleList = ['Module Title', 'module title', 'Module title', 'module Title', 'Title', 'title']
+    moduleTitleList = ['Module Title', 'module title', 'Module title', 'module Title', 'Title', 'title', 'TITLE']
     moduleDescriptionList = ['Module Description', 'module Description', 'Module description', 'module Description'
                                                                                                'Description',
                              'description']
@@ -21,18 +23,18 @@ def findTitleAndDesc():
 
 
 
+
+
     if moduleTitle and moduleDesc:
         writeHeaders()
         for index, row in dataframe.iterrows():
             filterKeywords(str(row[moduleTitle]), str(row[moduleDesc]))
-        writeOutput(moduleTitle)
     else:
         print("Could not find module title and description")
 
 
 def filterKeywords(moduleTitle, moduleDescription):
-    print(moduleDescription)
-    exit()
+
     sdg = {}
     output = {}
     moduleDescription = moduleDescription.lower().strip()
@@ -50,13 +52,15 @@ def filterKeywords(moduleTitle, moduleDescription):
     for index in sdg.keys():
 
         if any(word in moduleDescription for word in sdg[index]):
-
             sdgList.append("YES")
         else:
             sdgList.append("NO")
-    output[moduleTitle] = sdgList
-
     writeOutput(sdgList)
+
+    # output[moduleTitle] = sdgList
+
+
+
 
 
 
@@ -67,14 +71,20 @@ def writeHeaders():
         dataframe[sdgHeader] = ''
 
 
+
+
 def writeOutput(list):
     try:
+
+        global count
         if list:
             for sdgNo in range(1, 18):
                 sdgHeader = 'SDG' + str(sdgNo)
-                dataframe[sdgHeader] = list[sdgNo - 1]
+                dataframe.loc[count][sdgHeader] = list[sdgNo - 1]
 
+        count +=1
         dataframe.to_csv('Test.csv', sep=',', encoding="utf-8", index=False)
+
     except Exception:
         print("Error writing to CSV file")
 
@@ -86,8 +96,11 @@ def writeOutput(list):
 
 
 
-
 if __name__ == '__main__':
-    dataframe = readCSV('moduleInfoClassCodes.csv')
+    start = time.time()
+    dataframe = readCSV('ModuleInfoAll.csv')
+    count = 0
     findTitleAndDesc()
+    print(time.time() - start)
+
 
