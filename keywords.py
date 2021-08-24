@@ -31,6 +31,8 @@ def findTitleAndDesc():
 
 
 def filterKeywords(moduleTitle, moduleDescription):
+    print(moduleDescription)
+    exit()
     sdg = {}
     output = {}
     moduleDescription = moduleDescription.lower().strip()
