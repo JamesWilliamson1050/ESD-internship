@@ -3,10 +3,11 @@ import time
 
 import pandas as pd
 
+
 def readCSV(csvfile):
     try:
-        with open (csvfile, 'r', encoding='utf-8') as csv_file:
-           pass
+        with open(csvfile, 'r', encoding='utf-8') as csv_file:
+            pass
         df = pd.read_csv(csvfile)
     except Exception:
         e = Exception
@@ -19,8 +20,6 @@ def readCSV(csvfile):
         filterKeywords(row, df)
 
     writeCSV(df)
-
-
 
 
 def filterKeywords(row, df):
@@ -40,16 +39,13 @@ def filterKeywords(row, df):
 
     for index in sdg.keys():
 
-
         if any(word in moduleDescription for word in sdg[index]):
             row['SDG' + str(index)] = "YES"
         else:
             row['SDG' + str(index)] = "NO"
 
 
-
-
-
+# TODO improve the program to be more robust and not rely on specific names i.e 'Module Description'
 
 def writeCSV(df):
     try:
@@ -57,6 +53,6 @@ def writeCSV(df):
     except Exception:
         print("Could not write to CSV file ")
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     readCSV('moduleInfoAll.csv')
