@@ -5,21 +5,31 @@ import pandas as pd
 
 
 def readCSV(csvfile):
+    openSuccess = True
     try:
-        with open(csvfile, 'r', encoding='utf-8') as csv_file:
-            pass
-        df = pd.read_csv(csvfile)
+        if csvfile.endswith('.csv'):
+
+            with open(csvfile, 'r', encoding='utf-8') as csv_file:
+                df = pd.read_csv(csvfile)
+
+        else:
+            raise Exception
+
     except Exception:
         e = Exception
         print("Could not open CSV file")
+        openSuccess = False
 
-    for sdgNo in range(1, 18):
-        sdgHeader = 'SDG' + str(sdgNo)
-        df[sdgHeader] = ''
-    for index, row in df.iterrows():
-        filterKeywords(row, df)
+    if openSuccess:
+        for sdgNo in range(1, 18):
+            sdgHeader = 'SDG' + str(sdgNo)
+            df[sdgHeader] = ''
+        for index, row in df.iterrows():
+            filterKeywords(row, df)
 
-    writeCSV(df)
+        writeCSV(df)
+
+
 
 
 def filterKeywords(row, df):
@@ -55,4 +65,4 @@ def writeCSV(df):
 
 
 if __name__ == '__main__':
-    readCSV('moduleInfoAll.csv')
+    readCSV('KEYWORDS.csv')
