@@ -19,18 +19,22 @@ soup = BeautifulSoup(defaultHtml, 'lxml')
 # Basically finds all the classes individual extensions and stores them in a variable
 courses = soup.find_all('a', class_="course-search-result__link")
 
+
 # A dictionary with the module titles as the keys and module descriptions as values
 moduleTitleDesc = dict()
-moduleTupleList = []
+
 
 # A list containing all information of each module
 allModuleInfo = []
 
 # Used for outputting headers of CSV file
 headerInfo = ['Code', 'Module Title', 'Module Description', 'Degree Level', 'Module Level']
+
+# For storing all the information extracted from the class list csv files
 undergraduateList = []
 postgraduateList = []
 
+# Is supposed to be used to filter out modules that are not real modules
 filterList = ['Elective classes', 'Elective class', 'Elective', 'Year 1', 'Transferable Skills', 'Course Summary']
 
 
