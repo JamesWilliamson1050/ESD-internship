@@ -66,7 +66,6 @@ def readFromCSV(csvfile):
             moduleDescription = col[indexMD]
             moduleCode = col[indexMC]
 
-            print(moduleCode)
 
             if moduleCode == "":
                 department.append('Empty department')
@@ -161,12 +160,6 @@ if __name__ == '__main__':
     inspectFile('moduleInfo2codes.csv')
     #writeOutput(output)
 
+
     # ws.main()
 
-    # Get users to enter file name
-    # If file ends in txt read from text file
-    # If file ends in csv read from csv
-    # If file does not have an ending either let user choose to write to csv or text file  or both
-    # Web scrape data where possible
-    # Write web scraped data to chosen file type
-    # Then read from file and compare to keywords csv

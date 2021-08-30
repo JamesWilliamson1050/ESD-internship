@@ -51,5 +51,4 @@ def fillForm(Code):
 
     # print(cookies)
 
-if __name__ == '__main__':
-    fillForm("AG409")
+
