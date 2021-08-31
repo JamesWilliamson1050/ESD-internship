@@ -39,9 +39,11 @@ filterList = set(['elective classes', 'elective class', 'elective', 'year 1', 't
 
 
 def findModules():
-    # Loops through all courses
+    # Used to keep track of module titles that change
     titleChanged = False
     tempTitle = ""
+
+    # Loops through all courses
     for course in courses:
 
         # Outputs a course's
