@@ -19,7 +19,7 @@ soup = BeautifulSoup(defaultHtml, 'lxml')
 # Basically finds all the classes individual extensions and stores them in a variable
 courses = soup.find_all('a', class_="course-search-result__link")
 
-exit()
+
 
 # A dictionary with the module titles as the keys and module descriptions as values
 moduleTitleDesc = dict()
@@ -36,76 +36,6 @@ postgraduateList = []
 filterList = set(['elective classes', 'elective class', 'elective', 'year 1', 'transferable skills', 'course summary',
                   'year 1 - fundamentals', 'year 2 - core chemical engineering', 'year 4 - chemical engineering design',
                   'year 2', 'year 3', 'year 4', 'year 5 - advanced chemical engineering', 'year abroad', 'Year 3 Course Summary', 'Year 4 Course Summary'])
-
-
-# Used to fill in the undergraduate List
-# def fillUndergraduateList():
-#     with open('Class List Undergradute 21-22.csv', 'r') as undergraduateCSV:
-#         reader = csv.reader(undergraduateCSV)
-#
-#         for row in reader:
-#             if len(row) > 2:
-#                 undergraduateList.append(row)
-#
-#     undergraduateCSV.close()
-
-
-# Creates a list of all the postgraduate modules
-# def fillPostgraduateList():
-#     with open('Class List Postgraduate 21-22.csv', 'r') as postgraduateCSV:
-#         reader = csv.reader(postgraduateCSV)
-#
-#         for row in reader:
-#             if len(row) > 2:
-#                 postgraduateList.append(row)
-#
-#     postgraduateCSV.close()
-
-
-# # Searches for a module title in the list of undergraduate modules
-# def searchUndergraduate(moduleSearchUG):
-#     # Returns the code and level of a course found in the class catalogue csv file
-#     for mod in undergraduateList:
-#         if moduleSearchUG.lower() == mod[1].lower():
-#             return (mod[0], mod[3])
-#
-#
-# # Searches the postgraduate list for a moduleTitle
-# def searchPostgraduate(moduleSearchPG):
-#     for mod in postgraduateList:
-#         if moduleSearchPG.lower() == mod[1].lower():
-#             return mod[0], mod[3]
-
-
-# # Filters
-# def andFilter(string):
-#     if '&' and 'And' in string:
-#         return string
-#     elif '&' in string:
-#         string = string.replace('&', 'And')
-#     elif 'And' in string:
-#         string = string.replace('And', '&')
-#     if '1 And 2' in string:
-#         s1 = string.split('1')
-#         s1 = s1[0]
-#         s2 = s1 + '2'
-#         s1 = s1 + '1'
-#         string = s1, s2
-#     if 'I And II' in string:
-#         s1 = string.split('I')
-#         s2 = s1[0] + 'Ii'
-#         s1 = s1[0] + 'I'
-#         string = s1, s2
-#
-#     return string
-#
-#
-# def colonFilter(string):
-#     if ';' in string:
-#         string = string.replace(';', ':')
-#     elif ':' in string:
-#         string = string = string.replace(':', ';')
-#     return string
 
 
 def findModules():
@@ -213,19 +143,6 @@ def writeToCSV():
     f.close()
 
 
-# # Writes to a text file
-# def writeToText():
-#     # Writing module title and module description to text file
-#     with open('moduleInfo.txt', 'w', encoding="UTF8", newline='') as f:
-#         for ModuleInfo in allModuleInfo:
-#             titleOfModule = ModuleInfo[1]
-#             descOfModule = ModuleInfo[2]
-#
-#             f.write("`" + titleOfModule + "` " + " `" + descOfModule + "`" + '\n')
-#         # write the header
-#
-#     f.close()
-
 
 def main():
     print("Start")
@@ -236,11 +153,5 @@ def main():
 if __name__ == '__main__':
     findModules()
     writeToCSV()
-    # print(searchPostgraduate('Maritime Safety & Risk'))
-
-# writeToCSV()
-# writeToText()
 
 
-# read_file = pd.read_csv('text.txt')
-# read_file.to_csv(r'moduleInfo.csv', index=None)

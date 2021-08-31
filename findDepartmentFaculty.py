@@ -17,25 +17,19 @@ def searchForDepAndFac():
     df['Department'] = ''
     df['Faculty'] = ''
 
-
     for index, row in df.iterrows():
         # Current module code
         mc = row['Module Code']
         if type(mc) == str:
-             department, faculty = wf.fillForm(mc)
-             row['Department'] = department
-             row['Faculty'] = faculty
-
+            department, faculty = wf.fillForm(mc)
+            row['Department'] = department
+            row['Faculty'] = faculty
 
     writeToCSV(df)
 
 
-
 def writeToCSV(dataframe):
-        dataframe.to_csv('moduleInfoAll.csv', sep=',', encoding="utf-8", index=False)
-
-
-
+    dataframe.to_csv('moduleInfoAll.csv', sep=',', encoding="utf-8", index=False)
 
 
 if __name__ == '__main__':

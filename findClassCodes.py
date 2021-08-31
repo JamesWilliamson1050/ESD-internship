@@ -21,7 +21,6 @@ def updateModuleData(webScrapedcsvFile):
         # if '(' in moduleTitle:
         #     moduleTitle = wordFilter.bracketFilter(moduleTitle)
 
-
         moduleSearch = degreeSearch(moduleTitle)
         moduleCode = moduleSearch[0]
         moduleLevel = moduleSearch[1]
@@ -36,41 +35,41 @@ def updateModuleData(webScrapedcsvFile):
             row['Module Level'] = moduleLevel[0]
 
         elif moduleCode is None:
-                moduleTitle = wordFilter.andFilter(moduleTitle)
-                moduleSearch = degreeSearch(moduleTitle)
-                moduleCode = moduleSearch[0]
-                moduleLevel = moduleSearch[1]
-                moduleCodeType = type(moduleCode)
+            moduleTitle = wordFilter.andFilter(moduleTitle)
+            moduleSearch = degreeSearch(moduleTitle)
+            moduleCode = moduleSearch[0]
+            moduleLevel = moduleSearch[1]
+            moduleCodeType = type(moduleCode)
 
-                if moduleCodeType == str:
-                    row['Module Code'] = moduleCode
-                    row['Module Level'] = moduleLevel
-                    row['Module Title'] = moduleTitle
-
-
-                elif moduleCodeType == numpy.ndarray:
-                    row['Module Code'] = moduleCode[0]
-                    row['Module Level'] = moduleLevel[0]
-                    row['Module Title'] = moduleTitle
-
-                elif moduleCode is None:
-                    if ';' in moduleTitle or ':' in moduleTitle:
-                        moduleTitle = wordFilter.colonFilter(moduleTitle)
-                        moduleSearch = degreeSearch(moduleTitle)
-                        moduleCode = moduleSearch[0]
-                        moduleLevel = moduleSearch[1]
-                        moduleCodeType = type(moduleCode)
-
-                        if moduleCodeType == str:
-                            row['Module Code'] = moduleCode
-                            row['Module Level'] = moduleLevel
-                            row['Module Title'] = moduleTitle
+            if moduleCodeType == str:
+                row['Module Code'] = moduleCode
+                row['Module Level'] = moduleLevel
+                row['Module Title'] = moduleTitle
 
 
-                        elif moduleCodeType == numpy.ndarray:
-                            row['Module Code'] = moduleCode[0]
-                            row['Module Level'] = moduleLevel[0]
-                            row['Module Title'] = moduleTitle
+            elif moduleCodeType == numpy.ndarray:
+                row['Module Code'] = moduleCode[0]
+                row['Module Level'] = moduleLevel[0]
+                row['Module Title'] = moduleTitle
+
+            elif moduleCode is None:
+                if ';' in moduleTitle or ':' in moduleTitle:
+                    moduleTitle = wordFilter.colonFilter(moduleTitle)
+                    moduleSearch = degreeSearch(moduleTitle)
+                    moduleCode = moduleSearch[0]
+                    moduleLevel = moduleSearch[1]
+                    moduleCodeType = type(moduleCode)
+
+                    if moduleCodeType == str:
+                        row['Module Code'] = moduleCode
+                        row['Module Level'] = moduleLevel
+                        row['Module Title'] = moduleTitle
+
+
+                    elif moduleCodeType == numpy.ndarray:
+                        row['Module Code'] = moduleCode[0]
+                        row['Module Level'] = moduleLevel[0]
+                        row['Module Title'] = moduleTitle
 
         elif '&' not in moduleTitle or 'And' not in moduleTitle:
             if ';' in moduleTitle or ':' in moduleTitle:
@@ -91,16 +90,8 @@ def updateModuleData(webScrapedcsvFile):
                     row['Module Level'] = moduleLevel[0]
                     row['Module Title'] = moduleTitle
 
-
-
     df = df.sort_values('Module Code', ascending=False)
     writeToCSV(df)
-
-
-    #
-
-    # Add in filtering code and search for the data again
-    # break
 
 
 def readUGCSV():
@@ -164,7 +155,6 @@ def searchPostgraduateClassList(moduleTitle):
 
 def writeToCSV(dataframe):
     dataframe.to_csv('moduleInfoClassCodes.csv', sep=',', encoding="utf-8", index=False)
-
 
 
 if __name__ == '__main__':
